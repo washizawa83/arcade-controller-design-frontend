@@ -34,3 +34,51 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Commands
+
+### App
+
+```bash
+# Development server
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Start production server
+npm start
+```
+
+### Biome (Linter/Formatter)
+
+```bash
+# Lint the project
+npm run lint
+
+# Format files in-place
+npm run format
+
+# Check (lint + format checks without writing)
+npm run check
+```
+
+### Git Hooks (Husky + lint-staged)
+
+- On commit: Biome formats staged files and runs lint. Commit fails on errors.
+- Manually run on staged files:
+
+```bash
+npx lint-staged
+```
+
+- Bypass hooks (not recommended):
+
+```bash
+git commit --no-verify -m "message"
+```
+
+### Editor (VSCode)
+
+- Format on save is enabled for Biome via `.vscode/settings.json`.
+- Recommended extension: `Biome` (ID: `biomejs.biome`).
