@@ -1,9 +1,11 @@
 import { BasePageLayout } from "@/layouts/BasePageLayout";
 
-export default function Home() {
+export const GeneratePage = () => {
   return (
     <BasePageLayout>
-      <h1>Generate Arcade Controller Design</h1>
+      <h1>Generate</h1>
     </BasePageLayout>
   );
-}
+};
+
+export default GeneratePage;
