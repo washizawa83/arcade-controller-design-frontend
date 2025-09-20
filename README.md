@@ -82,3 +82,15 @@ git commit --no-verify -m "message"
 
 - Format on save is enabled for Biome via `.vscode/settings.json`.
 - Recommended extension: `Biome` (ID: `biomejs.biome`).
+
+### Node version (Volta)
+
+- This project pins Node via Volta.
+- Required Node: `22.12.0` (see `package.json` → `volta.node`).
+- Install Volta and use pinned Node automatically:
+
+```bash
+curl https://get.volta.sh | bash
+# restart shell, then in this project directory
+node -v   # -> v22.12.0
+```

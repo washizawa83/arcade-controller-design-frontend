@@ -1,36 +1,39 @@
 {
-	"name": "app",
-	"version": "0.1.0",
-	"private": true,
-	"scripts": {
-		"dev": "next dev --turbopack",
-		"build": "next build --turbopack",
-		"start": "next start",
-		"prepare": "husky",
-		"lint": "biome lint .",
-		"format": "biome format --write .",
-		"check": "biome check ."
-	},
-	"dependencies": {
-		"next": "15.5.3",
-		"react": "19.1.0",
-		"react-dom": "19.1.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.2.4",
-		"@tailwindcss/postcss": "^4",
-		"@types/node": "^20",
-		"@types/react": "^19",
-		"@types/react-dom": "^19",
-		"husky": "^9.1.7",
-		"lint-staged": "^16.1.6",
-		"tailwindcss": "^4",
-		"typescript": "^5"
-	},
-	"lint-staged": {
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "prepare": "husky",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check ."
+  },
+  "dependencies": {
+    "next": "15.5.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,md}": [
       "biome format --write",
       "biome lint"
     ]
-	}
+  },
+  "volta": {
+    "node": "22.12.0"
+  }
 }
