@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .a{fill:none;stroke:#334155;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+      .b{fill:#f87171;opacity:.15}
+      .c{fill:none;stroke:#f87171;stroke-width:6}
+    </style>
+  </defs>
+  <rect x="16" y="16" width="96" height="56" rx="8" class="a"/>
+  <circle cx="96" cy="96" r="20" class="c"/>
+  <path class="a" d="M80 72l20 20"/>
+  <path class="b" d="M74 74l22 22a20 20 0 0 1-28 0a20 20 0 0 1 6-22z"/>
+</svg>
+

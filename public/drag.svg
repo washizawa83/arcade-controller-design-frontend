@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .a{fill:none;stroke:#f87171;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+      .b{fill:none;stroke:#334155;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <circle cx="64" cy="64" r="26" class="b"/>
+  <path class="a" d="M64 10v18M64 100v18M10 64h18M100 64h18"/>
+  <path class="a" d="M27 27l13 13M88 88l13 13M27 101l13-13M88 40l13-13"/>
+</svg>
+
