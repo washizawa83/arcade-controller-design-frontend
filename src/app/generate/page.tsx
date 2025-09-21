@@ -1,9 +1,12 @@
+import { DesignTool } from "@/features/design-tools/DesignTool";
 import { BasePageLayout } from "@/layouts/BasePageLayout";
 
 export const GeneratePage = () => {
   return (
     <BasePageLayout>
-      <h1>Generate</h1>
+      <div className="w-full h-full">
+        <DesignTool />
+      </div>
     </BasePageLayout>
   );
 };

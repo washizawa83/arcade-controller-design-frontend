@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const BaseHeader = async () => {
   return (
-    <header className="h-14 w-screen items-center flex items-center">
+    <header className="h-header w-screen items-center flex items-center">
       <div className="mx-auto flex w-11/12 items-center justify-between 2xl:w-[1280px]">
         <div>
           <h1 className="font-krona text-xl">

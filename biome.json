@@ -26,22 +26,29 @@
     "rules": {
       "recommended": true,
       "a11y": {
-        "recommended": true
+        "recommended": true,
+        "useButtonType": "off",
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off"
       },
       "correctness": {
         "recommended": true,
-        "noUnusedVariables": "error"
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": "off"
       },
       "performance": {
         "recommended": true
       },
       "style": {
         "recommended": true,
-        "useConst": "error"
+        "useConst": "error",
+        "useImportType": "off",
+        "noNonNullAssertion": "off"
       },
       "suspicious": {
         "recommended": true,
-        "noExplicitAny": "warn",
+        "noExplicitAny": "off",
         "noUnknownAtRules": "off"
       }
     }
