@@ -1,187 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-type ChangeListener = () => void;
-
-export type ButtonInit = {
-  id: string; // e.g., GPIO02
-  name: string; // e.g., UP
-  x: number;
-  y: number;
-  r?: number;
-};
-
-export type ButtonSizeMm = 18 | 24 | 30;
-export const BUTTON_SIZES_MM: ButtonSizeMm[] = [18, 24, 30];
-
-export class ControllerButton {
-  // internal numeric id for interaction
-  uid: number;
-  private _id: string;
-  private _name: string;
-  private _x: number;
-  private _y: number;
-  private _r: number;
-  private listeners: Set<ChangeListener> = new Set();
-
-  constructor(uid: number, spec: Required<ButtonInit>) {
-    this.uid = uid;
-    this._id = spec.id;
-    this._name = spec.name;
-    this._x = spec.x;
-    this._y = spec.y;
-    this._r = spec.r;
-  }
-
-  get id(): string {
-    return this._id;
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  get x(): number {
-    return this._x;
-  }
-
-  get y(): number {
-    return this._y;
-  }
-
-  get r(): number {
-    return this._r;
-  }
-
-  setPosition(x: number, y: number): void {
-    this._x = x;
-    this._y = y;
-    this.emitChange();
-  }
-
-  setRadius(r: number): void {
-    this._r = r;
-    this.emitChange();
-  }
-
-  setSizeMm(size: ButtonSizeMm): void {
-    this._r = size / 2;
-    this.emitChange();
-  }
-
-  setIdAndName(id: string, name: string): void {
-    this._id = id;
-    this._name = name;
-    this.emitChange();
-  }
-
-  subscribe(listener: ChangeListener): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
-
-  private emitChange(): void {
-    for (const l of this.listeners) l();
-  }
-}
-
-export class ButtonStore {
-  private buttons: ControllerButton[] = [];
-  private listeners: Set<ChangeListener> = new Set();
-  private nextUid = 1;
-
-  constructor(initial: ButtonInit[]) {
-    this.reset(initial);
-  }
-
-  getAll(): ControllerButton[] {
-    return this.buttons;
-  }
-
-  findByUid(uid: number | null | undefined): ControllerButton | undefined {
-    if (uid == null) return undefined;
-    return this.buttons.find((b) => b.uid === uid);
-  }
-
-  addButton(spec: ButtonInit): ControllerButton {
-    const btn = new ControllerButton(this.nextUid++, {
-      id: spec.id,
-      name: spec.name,
-      x: spec.x,
-      y: spec.y,
-      r: spec.r ?? 12,
-    });
-    btn.subscribe(() => this.emitChange());
-    this.buttons.push(btn);
-    this.emitChange();
-    return btn;
-  }
-
-  reset(initial: ButtonInit[]): void {
-    this.buttons = [];
-    this.nextUid = 1;
-    for (const it of initial) this.addButton(it);
-    this.emitChange();
-  }
-
-  setButtonSize(uid: number, size: ButtonSizeMm): void {
-    const btn = this.findByUid(uid);
-    if (!btn) return;
-    btn.setSizeMm(size);
-  }
-
-  setAllButtonSize(size: ButtonSizeMm): void {
-    for (const b of this.buttons) b.setSizeMm(size);
-    this.emitChange();
-  }
-
-  subscribe(listener: ChangeListener): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
-
-  private emitChange(): void {
-    for (const l of this.listeners) l();
-  }
-
-  hitTest(lx: number, ly: number): ControllerButton | null {
-    for (let i = this.buttons.length - 1; i >= 0; i -= 1) {
-      const b = this.buttons[i];
-      const dx = lx - b.x;
-      const dy = ly - b.y;
-      const dist2 = dx * dx + dy * dy;
-      const r = b.r * 1.4; // hit slop
-      if (dist2 <= r * r) return b;
-    }
-    return null;
-  }
-}
+import { ButtonStore, ControllerButton } from "./DesignTool";
 
 const LOGICAL_WIDTH = 300;
 const LOGICAL_HEIGHT = 200;
 
-// Default buttons (for reset) — logical coordinates
-export const DEFAULT_BUTTONS: ButtonInit[] = [
-  { id: "GPIO02", name: "UP", x: 150, y: 130, r: 15 },
-  { id: "GPIO04", name: "RIGHT", x: 135.5, y: 80.4, r: 12 },
-  { id: "GPIO03", name: "DOWN", x: 109.2, y: 67.5, r: 12 },
-  { id: "GPIO05", name: "LEFT", x: 79.7, y: 67.6, r: 12 },
-  { id: "GPIO10", name: "P1", x: 160.7, y: 68.48, r: 12 },
-  { id: "GPIO11", name: "P2", x: 187.5, y: 56.7, r: 12 },
-  { id: "GPIO12", name: "P3", x: 217.2, y: 56.7, r: 12 },
-  { id: "GPIO13", name: "P4", x: 246.7, y: 60.5, r: 12 },
-  { id: "GPIO06", name: "K1", x: 158, y: 97.8, r: 12 },
-  { id: "GPIO07", name: "K2", x: 185.93, y: 86.78, r: 12 },
-  { id: "GPIO08", name: "K3", x: 217, y: 86.6, r: 12 },
-  { id: "GPIO09", name: "K4", x: 246.5, y: 91.6, r: 12 },
-  { id: "GPIO18", name: "LS", x: 120, y: 123, r: 12 },
-  { id: "GPIO19", name: "RS", x: 180, y: 123, r: 12 },
-  { id: "GPIO21", name: "A2", x: 49.5, y: 74, r: 12 },
-  { id: "GPIO20", name: "A1", x: 210, y: 20, r: 9 },
-  { id: "GPIO17", name: "START", x: 236, y: 20, r: 9 },
-  { id: "GPIO16", name: "SELECT", x: 262, y: 20, r: 9 },
-];
+// Default buttons (kept in DesignTool now)
 
 // Raspberry Pi (top-left origin, logical units same as board mm)
 const RASPI = { x: 137.5, y: 0, w: 25, h: 53.5 } as const;
@@ -201,20 +26,19 @@ const MOUNTING_HOLES: Array<{ x: number; y: number; r: number }> = [
   { x: 175, y: 10, r: HOLE_RADIUS },
 ];
 
-type CanvasProps = {
-  store?: ButtonStore;
+type Props = {
+  store: ButtonStore;
 };
 
-export const Canvas = ({ store }: CanvasProps) => {
+export const Canvas = ({ store }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Store of buttons with change subscription
-  const storeRef = useRef<ButtonStore>(
-    store ?? new ButtonStore(DEFAULT_BUTTONS)
-  );
+  const storeRef = useRef(store);
   const scaleRef = useRef<number>(1);
   const dprRef = useRef<number>(1);
   const draggingIdRef = useRef<number | null>(null);
+  const selectedIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -278,17 +102,20 @@ export const Canvas = ({ store }: CanvasProps) => {
 
       // Buttons
       for (const btn of storeRef.current.getAll()) {
-        const isSquare = btn.r === 9; // 18mm 指定は四角で描画
+        const radius = btn.d / 2;
+        const isSquare = radius === 9; // 18mm 指定は四角で描画
+        const isSelected = selectedIdRef.current === btn.uid;
         ctx.beginPath();
         ctx.fillStyle = "#f87171"; // red-400
         if (isSquare) {
-          const size = btn.r * 2; // 直径と同じ一辺
-          ctx.rect(btn.x - btn.r, btn.y - btn.r, size, size);
+          const size = btn.d; // 直径と同じ一辺
+          ctx.rect(btn.x - radius, btn.y - radius, size, size);
         } else {
-          ctx.arc(btn.x, btn.y, btn.r, 0, Math.PI * 2);
+          ctx.arc(btn.x, btn.y, radius, 0, Math.PI * 2);
         }
         ctx.fill();
-        ctx.strokeStyle = "#ef4444";
+        ctx.strokeStyle = isSelected ? "#ffb1b1" : "#ef4444"; // selected: amber-500
+        ctx.lineWidth = isSelected ? 3 / scale : 1.5 / scale;
         ctx.stroke();
       }
     };
@@ -340,8 +167,20 @@ export const Canvas = ({ store }: CanvasProps) => {
       const { x, y } = toLogical(e.clientX, e.clientY);
       const hit = hitTest(x, y);
       if (hit) {
-        draggingIdRef.current = hit.uid;
-        (e.target as Element).setPointerCapture(e.pointerId);
+        // If already selected, begin dragging; else just select
+        if (selectedIdRef.current === hit.uid) {
+          draggingIdRef.current = hit.uid;
+          (e.target as Element).setPointerCapture(e.pointerId);
+        } else {
+          selectedIdRef.current = hit.uid;
+          draw();
+        }
+      } else {
+        // Clicked empty area: clear selection
+        if (selectedIdRef.current !== null) {
+          selectedIdRef.current = null;
+          draw();
+        }
       }
     };
 
@@ -351,8 +190,9 @@ export const Canvas = ({ store }: CanvasProps) => {
       const btn = storeRef.current.findByUid(draggingIdRef.current);
       if (!btn) return;
       // Clamp within logical bounds
-      const clampedX = Math.max(btn.r, Math.min(LOGICAL_WIDTH - btn.r, x));
-      const clampedY = Math.max(btn.r, Math.min(LOGICAL_HEIGHT - btn.r, y));
+      const radius = btn.d / 2;
+      const clampedX = Math.max(radius, Math.min(LOGICAL_WIDTH - radius, x));
+      const clampedY = Math.max(radius, Math.min(LOGICAL_HEIGHT - radius, y));
       btn.setPosition(clampedX, clampedY);
     };
 
@@ -361,6 +201,18 @@ export const Canvas = ({ store }: CanvasProps) => {
       try {
         (e.target as Element).releasePointerCapture(e.pointerId);
       } catch {}
+    };
+
+    // Clicking outside the canvas clears selection
+    const onWindowPointerDown = (e: PointerEvent) => {
+      const canvasEl = canvasRef.current;
+      if (!canvasEl) return;
+      if (!canvasEl.contains(e.target as Node)) {
+        if (selectedIdRef.current !== null) {
+          selectedIdRef.current = null;
+          draw();
+        }
+      }
     };
 
     // Subscribe redraw to any store/button changes (also handles future form edits)
@@ -372,12 +224,18 @@ export const Canvas = ({ store }: CanvasProps) => {
     canvas.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointerdown", onWindowPointerDown, {
+      capture: true,
+    });
 
     return () => {
       ro.disconnect();
       canvas.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointerdown", onWindowPointerDown, {
+        capture: true,
+      } as any);
       unsubscribe();
     };
   }, []);

@@ -4,7 +4,9 @@ import { BasePageLayout } from "@/layouts/BasePageLayout";
 export const GeneratePage = () => {
   return (
     <BasePageLayout>
-      <DesignTool />
+      <div className="w-full h-full">
+        <DesignTool />
+      </div>
     </BasePageLayout>
   );
 };
