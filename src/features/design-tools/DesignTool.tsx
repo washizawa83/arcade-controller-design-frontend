@@ -311,6 +311,7 @@ export const DesignTool = () => {
   const storeRef = useRef<ButtonStore>(new ButtonStore(DEFAULT_BUTTONS));
   const [showMarkers, setShowMarkers] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [showLabels, setShowLabels] = useState(true);
 
   const BACKEND_BASE =
     (typeof window !== "undefined" &&
@@ -387,18 +388,31 @@ export const DesignTool = () => {
             <button
               className="rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
               onClick={() => storeRef.current.reset(DEFAULT_BUTTONS)}
+              type="button"
             >
               初期配置に戻す
             </button>
             <button
               className="ml-2 rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
               onClick={() => setShowMarkers((v) => !v)}
+              type="button"
             >
               {showMarkers ? "目印を隠す" : "目印を表示"}
             </button>
+            <button
+              className="ml-2 rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+              onClick={() => setShowLabels((v) => !v)}
+              type="button"
+            >
+              {showLabels ? "ボタン名を隠す" : "ボタン名を表示"}
+            </button>
           </div>
         </div>
-        <Canvas store={storeRef.current} showMarkers={showMarkers} />
+        <Canvas
+          store={storeRef.current}
+          showMarkers={showMarkers}
+          showLabels={showLabels}
+        />
       </div>
       <div className="w-[270px] shrink-0">
         <SelectButtonList store={storeRef.current} />

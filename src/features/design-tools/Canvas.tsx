@@ -29,9 +29,14 @@ const MOUNTING_HOLES: Array<{ x: number; y: number; r: number }> = [
 type Props = {
   store: ButtonStore;
   showMarkers?: boolean;
+  showLabels?: boolean;
 };
 
-export const Canvas = ({ store, showMarkers = true }: Props) => {
+export const Canvas = ({
+  store,
+  showMarkers = true,
+  showLabels = true,
+}: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Store of buttons with change subscription
@@ -95,6 +100,23 @@ export const Canvas = ({ store, showMarkers = true }: Props) => {
       ctx.rect(RASPI.x, RASPI.y, RASPI.w, RASPI.h);
       ctx.fill();
       ctx.stroke();
+      // Raspberry Pi label (vertical, centered, color matches outline) - always visible
+      {
+        const label = "Raspberry Pi";
+        const cx = RASPI.x + RASPI.w / 2;
+        const cy = RASPI.y + RASPI.h / 2;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        // Keep label as small as reasonably legible
+        const fontSize = 4; // minimal, consistent small label
+        ctx.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+        ctx.fillStyle = "#16a34a";
+        ctx.fillText(label, 0, 0);
+        ctx.restore();
+      }
       ctx.restore();
 
       // Mounting holes (filled circles)
@@ -124,6 +146,33 @@ export const Canvas = ({ store, showMarkers = true }: Props) => {
             ctx.arc(def.x, def.y, radius, 0, Math.PI * 2);
           }
           ctx.stroke();
+
+          // Marker label (inside shape, color matches stroke color) - always visible when markers are shown
+          const markerLabel = def.name || def.id;
+          if (markerLabel) {
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            // Fit inside marker bounds
+            const maxW = radius * 2 * 0.9;
+            const maxH = radius * 2 * 0.7;
+            let fontSize = Math.min(10, Math.max(5, Math.floor(radius * 0.6)));
+            for (let i = 0; i < 6; i++) {
+              ctx.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+              const m = ctx.measureText(markerLabel);
+              const w = m.width;
+              const h =
+                m.actualBoundingBoxAscent + m.actualBoundingBoxDescent ||
+                fontSize;
+              if (w <= maxW && h <= maxH) break;
+              fontSize -= 1;
+              if (fontSize < 5) break;
+            }
+            ctx.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+            ctx.fillStyle = "#38bdf8"; // match marker stroke
+            ctx.fillText(markerLabel, def.x, def.y);
+            ctx.restore();
+          }
         }
         ctx.restore();
       }
@@ -149,6 +198,88 @@ export const Canvas = ({ store, showMarkers = true }: Props) => {
         ctx.strokeStyle = isSelected ? "#ffb1b1" : "#ef4444"; // selected: amber-500
         ctx.lineWidth = isSelected ? 3 / scale : 1.5 / scale;
         ctx.stroke();
+
+        // Draw button label badge (design-focused)
+        const label = btn.name || btn.id;
+        if (showLabels && label) {
+          // Helper: rounded rect
+          const drawRoundedRect = (
+            x: number,
+            y: number,
+            w: number,
+            h: number,
+            r: number
+          ) => {
+            const rr = Math.min(r, h / 2, w / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + rr, y);
+            ctx.lineTo(x + w - rr, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+            ctx.lineTo(x + w, y + h - rr);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+            ctx.lineTo(x + rr, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+            ctx.lineTo(x, y + rr);
+            ctx.quadraticCurveTo(x, y, x + rr, y);
+            ctx.closePath();
+          };
+
+          // Badge target position: below the button (auto-flip if near bottom)
+          const badgeOffset = Math.max(1, Math.floor(radius * 0.1));
+          let by = btn.y + radius + badgeOffset;
+          const minMargin = 2;
+          // Font sizing
+          let fontSize = Math.min(8, Math.max(5, Math.floor(radius * 0.38)));
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          // Fit text into max width relative to button size
+          const maxTextWidth = Math.max(12, Math.floor(btn.d * 0.6));
+          for (let tries = 0; tries < 6; tries++) {
+            ctx.font = `600 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+            const w = ctx.measureText(label).width;
+            if (w <= maxTextWidth || fontSize <= 7) break;
+            fontSize -= 1;
+          }
+          const textW = ctx.measureText(label).width;
+          const padX = 1.5;
+          const padY = 1;
+          const badgeW = Math.ceil(textW + padX * 2);
+          const badgeH = Math.ceil(fontSize + padY * 2);
+          let bx = Math.round(btn.x - badgeW / 2);
+          // If badge would overflow bottom, place it above the button instead
+          if (by + badgeH + minMargin > LOGICAL_HEIGHT) {
+            by = btn.y - radius - badgeOffset - badgeH;
+            if (by < minMargin) by = minMargin;
+          }
+          // Clamp horizontally
+          if (bx < minMargin) bx = minMargin;
+          if (bx + badgeW > LOGICAL_WIDTH - minMargin)
+            bx = LOGICAL_WIDTH - minMargin - badgeW;
+
+          // Glow/shadow
+          ctx.save();
+          ctx.shadowColor = "rgba(0,0,0,0.15)";
+          ctx.shadowBlur = 0.8 / scale;
+          ctx.shadowOffsetY = 0.4 / scale;
+          // Background
+          drawRoundedRect(bx, by, badgeW, badgeH, badgeH / 2);
+          ctx.fillStyle = isSelected
+            ? "rgba(239,68,68,0.5)"
+            : "rgba(15,23,42,0.35)"; // selected: red, else slate
+          ctx.fill();
+          // Border
+          ctx.lineWidth = 0.35 / scale;
+          ctx.strokeStyle = isSelected
+            ? "rgba(255,255,255,0.18)"
+            : "rgba(255,255,255,0.08)";
+          ctx.stroke();
+          ctx.restore();
+
+          // Text
+          ctx.fillStyle = "#fff";
+          ctx.font = `600 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+          ctx.fillText(label, bx + badgeW / 2, by + badgeH / 2);
+        }
       }
     };
 
@@ -397,7 +528,7 @@ export const Canvas = ({ store, showMarkers = true }: Props) => {
       } as any);
       unsubscribe();
     };
-  }, [showMarkers]);
+  }, [showMarkers, showLabels]);
 
   return (
     <canvas
