@@ -370,37 +370,37 @@ export const DesignTool = () => {
   };
   return (
     <div
-      className="w-full flex gap-4"
+      className="w-full flex flex-col md:flex-row gap-4"
       style={{ minHeight: "var(--spacing-content)" }}
     >
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between pb-2">
-          <div>
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between pb-2">
+          <div className="w-full md:w-auto">
             <button
-              className="ml-2 rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900 disabled:opacity-50"
+              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900 disabled:opacity-50"
               onClick={handleGenerate}
               disabled={isSending}
             >
               {isSending ? "送信中..." : "基盤データを生成"}
             </button>
           </div>
-          <div>
+          <div className="flex w-full md:w-auto flex-col md:flex-row gap-2">
             <button
-              className="rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
               onClick={() => storeRef.current.reset(DEFAULT_BUTTONS)}
               type="button"
             >
               初期配置に戻す
             </button>
             <button
-              className="ml-2 rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
               onClick={() => setShowMarkers((v) => !v)}
               type="button"
             >
               {showMarkers ? "目印を隠す" : "目印を表示"}
             </button>
             <button
-              className="ml-2 rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
               onClick={() => setShowLabels((v) => !v)}
               type="button"
             >
@@ -414,7 +414,7 @@ export const DesignTool = () => {
           showLabels={showLabels}
         />
       </div>
-      <div className="w-[270px] shrink-0">
+      <div className="w-full md:w-[270px] shrink-0">
         <SelectButtonList store={storeRef.current} />
       </div>
     </div>
