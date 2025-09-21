@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ButtonStore, ControllerButton } from "./DesignTool";
+import { ButtonStore, ControllerButton, DEFAULT_BUTTONS } from "./DesignTool";
 
 const LOGICAL_WIDTH = 300;
 const LOGICAL_HEIGHT = 200;
@@ -28,9 +28,10 @@ const MOUNTING_HOLES: Array<{ x: number; y: number; r: number }> = [
 
 type Props = {
   store: ButtonStore;
+  showMarkers?: boolean;
 };
 
-export const Canvas = ({ store }: Props) => {
+export const Canvas = ({ store, showMarkers = true }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Store of buttons with change subscription
@@ -38,6 +39,14 @@ export const Canvas = ({ store }: Props) => {
   const scaleRef = useRef<number>(1);
   const dprRef = useRef<number>(1);
   const draggingIdRef = useRef<number | null>(null);
+  const isDraggingGroupRef = useRef<boolean>(false);
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const dragSnapshotRef = useRef<
+    Array<{ uid: number; x: number; y: number; radius: number }>
+  >([]);
+  const blockerCirclesRef = useRef<Array<{ x: number; y: number; r: number }>>(
+    []
+  );
   const selectedIdRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -88,23 +97,46 @@ export const Canvas = ({ store }: Props) => {
       ctx.stroke();
       ctx.restore();
 
-      // Mounting holes
+      // Mounting holes (filled circles)
       for (const hole of MOUNTING_HOLES) {
         ctx.beginPath();
         ctx.arc(hole.x, hole.y, hole.r, 0, Math.PI * 2);
-        // simulate cut-out with panel color, outline with lighter stroke
-        ctx.fillStyle = "#0f172a"; // same as panel fill
+        ctx.fillStyle = "#94a3b8"; // slate-400
         ctx.fill();
-        ctx.strokeStyle = "#94a3b8"; // slate-400
-        ctx.lineWidth = 1.5 / scale;
+        ctx.strokeStyle = "#334155"; // slate-700 border
+        ctx.lineWidth = 1 / scale;
         ctx.stroke();
       }
+
+      // Default position markers (solid circles or squares for 18mm)
+      if (showMarkers) {
+        ctx.save();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = "#38bdf8"; // sky-400
+        ctx.lineWidth = 1 / scale;
+        for (const def of DEFAULT_BUTTONS) {
+          const radius = (def.d ?? 24) / 2;
+          ctx.beginPath();
+          if (radius === 9) {
+            const size = radius * 2;
+            ctx.rect(def.x - radius, def.y - radius, size, size);
+          } else {
+            ctx.arc(def.x, def.y, radius, 0, Math.PI * 2);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // Keep selected uid from store
+      const selected = storeRef.current.getSelectedUids();
+      selectedIdRef.current = selected.length === 1 ? selected[0] : null;
 
       // Buttons
       for (const btn of storeRef.current.getAll()) {
         const radius = btn.d / 2;
         const isSquare = radius === 9; // 18mm 指定は四角で描画
-        const isSelected = selectedIdRef.current === btn.uid;
+        const isSelected = storeRef.current.isSelected(btn.uid);
         ctx.beginPath();
         ctx.fillStyle = "#f87171"; // red-400
         if (isSquare) {
@@ -167,37 +199,164 @@ export const Canvas = ({ store }: Props) => {
       const { x, y } = toLogical(e.clientX, e.clientY);
       const hit = hitTest(x, y);
       if (hit) {
-        // If already selected, begin dragging; else just select
-        if (selectedIdRef.current === hit.uid) {
+        // If already selected (among possibly many), begin dragging as a group; else select
+        if (storeRef.current.isSelected(hit.uid)) {
           draggingIdRef.current = hit.uid;
+          isDraggingGroupRef.current = true;
+          dragStartRef.current = { x, y };
+          // snapshot selected buttons' start positions and radii
+          dragSnapshotRef.current = storeRef.current
+            .getSelectedUids()
+            .map((uid) => {
+              const b = storeRef.current.findByUid(uid)!;
+              return { uid, x: b.x, y: b.y, radius: b.d / 2 };
+            });
+          // prepare blockers (non-selected buttons)
+          const selectedSet = new Set(storeRef.current.getSelectedUids());
+          blockerCirclesRef.current = storeRef.current
+            .getAll()
+            .filter((b) => !selectedSet.has(b.uid))
+            .map((b) => ({ x: b.x, y: b.y, r: b.d / 2 }));
           (e.target as Element).setPointerCapture(e.pointerId);
         } else {
-          selectedIdRef.current = hit.uid;
-          draw();
+          if (e.shiftKey) storeRef.current.toggleSelected(hit.uid);
+          else storeRef.current.setSelectedExclusive(hit.uid);
         }
       } else {
         // Clicked empty area: clear selection
-        if (selectedIdRef.current !== null) {
-          selectedIdRef.current = null;
-          draw();
-        }
+        storeRef.current.clearSelection();
       }
     };
 
+    const CLEARANCE_MM = 1;
+
+    const constrainPosition = (
+      x: number,
+      y: number,
+      radius: number,
+      blockers: Array<{ x: number; y: number; r: number }>
+    ): { x: number; y: number } => {
+      let nx = x;
+      let ny = y;
+      const eps = 1e-3;
+
+      // Precompute inflated RPi rect
+      const inflate = radius + CLEARANCE_MM;
+      const left = RASPI.x - inflate;
+      const right = RASPI.x + RASPI.w + inflate;
+      const top = RASPI.y - inflate;
+      const bottom = RASPI.y + RASPI.h + inflate;
+
+      // Iterate a few times to resolve interactions between constraints
+      for (let iter = 0; iter < 5; iter++) {
+        let moved = false;
+
+        // 1) Clamp to board edges first
+        const clampedX = Math.max(radius, Math.min(LOGICAL_WIDTH - radius, nx));
+        const clampedY = Math.max(
+          radius,
+          Math.min(LOGICAL_HEIGHT - radius, ny)
+        );
+        if (Math.abs(clampedX - nx) > eps || Math.abs(clampedY - ny) > eps) {
+          nx = clampedX;
+          ny = clampedY;
+          moved = true;
+        }
+
+        // 2) Keep away from Raspberry Pi inflated rectangle
+        if (nx > left && nx < right && ny > top && ny < bottom) {
+          const dl = Math.abs(nx - left);
+          const dr = Math.abs(right - nx);
+          const dt = Math.abs(ny - top);
+          const db = Math.abs(bottom - ny);
+          const min = Math.min(dl, dr, dt, db);
+          if (min === dl) nx = left;
+          else if (min === dr) nx = right;
+          else if (min === dt) ny = top;
+          else ny = bottom;
+          moved = true;
+        }
+
+        // 3) Keep away from mounting holes (circle-circle separation)
+        for (const hole of MOUNTING_HOLES) {
+          const minDist = hole.r + radius + CLEARANCE_MM;
+          const dx = nx - hole.x;
+          const dy = ny - hole.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < minDist - eps) {
+            if (dist === 0) {
+              nx = hole.x + minDist;
+              ny = hole.y;
+            } else {
+              const scale = minDist / dist;
+              nx = hole.x + dx * scale;
+              ny = hole.y + dy * scale;
+            }
+            moved = true;
+          }
+        }
+
+        // 3b) Keep away from other buttons treated as circles
+        for (const c of blockers) {
+          const minDist = c.r + radius + CLEARANCE_MM;
+          const dx = nx - c.x;
+          const dy = ny - c.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < minDist - eps) {
+            if (dist === 0) {
+              nx = c.x + minDist;
+              ny = c.y;
+            } else {
+              const scale = minDist / dist;
+              nx = c.x + dx * scale;
+              ny = c.y + dy * scale;
+            }
+            moved = true;
+          }
+        }
+
+        // 4) Re-clamp to edges after hole push
+        const againX = Math.max(radius, Math.min(LOGICAL_WIDTH - radius, nx));
+        const againY = Math.max(radius, Math.min(LOGICAL_HEIGHT - radius, ny));
+        if (Math.abs(againX - nx) > eps || Math.abs(againY - ny) > eps) {
+          nx = againX;
+          ny = againY;
+          moved = true;
+        }
+
+        if (!moved) break;
+      }
+
+      return { x: nx, y: ny };
+    };
+
     const onPointerMove = (e: PointerEvent) => {
-      if (draggingIdRef.current == null) return;
+      if (!isDraggingGroupRef.current || draggingIdRef.current == null) return;
       const { x, y } = toLogical(e.clientX, e.clientY);
-      const btn = storeRef.current.findByUid(draggingIdRef.current);
-      if (!btn) return;
-      // Clamp within logical bounds
-      const radius = btn.d / 2;
-      const clampedX = Math.max(radius, Math.min(LOGICAL_WIDTH - radius, x));
-      const clampedY = Math.max(radius, Math.min(LOGICAL_HEIGHT - radius, y));
-      btn.setPosition(clampedX, clampedY);
+      if (!dragStartRef.current) return;
+      const dx = x - dragStartRef.current.x;
+      const dy = y - dragStartRef.current.y;
+      const snap = (v: number) => Math.round(v * 10) / 10;
+      for (const item of dragSnapshotRef.current) {
+        const b = storeRef.current.findByUid(item.uid);
+        if (!b) continue;
+        const nx = item.x + dx;
+        const ny = item.y + dy;
+        const constrained = constrainPosition(
+          nx,
+          ny,
+          item.radius,
+          blockerCirclesRef.current
+        );
+        b.setPosition(snap(constrained.x), snap(constrained.y));
+      }
     };
 
     const onPointerUp = (e: PointerEvent) => {
       draggingIdRef.current = null;
+      isDraggingGroupRef.current = false;
+      dragStartRef.current = null;
+      dragSnapshotRef.current = [];
       try {
         (e.target as Element).releasePointerCapture(e.pointerId);
       } catch {}
@@ -238,7 +397,7 @@ export const Canvas = ({ store }: Props) => {
       } as any);
       unsubscribe();
     };
-  }, []);
+  }, [showMarkers]);
 
   return (
     <canvas
