@@ -30,6 +30,9 @@ export default function Home() {
             <p className="mt-4 text-slate-600 md:text-lg">
               300×200の基板空間で、ボタン配置をドラッグ＆ドロップで直感的にデザイン。
               <br />
+              基盤の設計を行うことなくホットスワップ可能な
+              <span className="text-red-400">レバーレスコントローラー</span>
+              の制作を可能にします。
               ラズパイや取り付け穴の位置を考慮した安全な距離制御も自動で行います。
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -40,10 +43,10 @@ export default function Home() {
                 今すぐはじめる
               </Link>
               <a
-                href={`#${featuresId}`}
+                href="/document"
                 className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-slate-700 shadow-sm transition hover:border-red-300 hover:text-red-500"
               >
-                機能を見る
+                ドキュメント
               </a>
             </div>
           </div>
