@@ -9,7 +9,7 @@ export const BaseHeader = async () => {
       <div className="mx-auto w-11/12 2xl:w-[1280px] flex items-center justify-between">
         <div className="flex items-center">
           <h1 className="font-krona text-xl md:text-2xl tracking-tight text-slate-900">
-            <Link href="/" className="hover:text-red-400 transition-colors">
+            <Link href="/" className="text-gray-950 transition-colors">
               Modern <span className="text-red-400">Design</span>
             </Link>
           </h1>
@@ -33,10 +33,10 @@ export const BaseHeader = async () => {
           </li>
           <li>
             <Link
-              href="/"
+              href="/document"
               className="px-2 py-1 rounded-md hover:text-red-400 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 transition-colors"
             >
-              Contact
+              Document
             </Link>
           </li>
         </ul>
