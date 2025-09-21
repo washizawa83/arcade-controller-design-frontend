@@ -9,7 +9,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --spacing-header: 3.5rem;
+  --spacing-content: calc(100svh - var(--spacing-header));
 }
 
 body {
