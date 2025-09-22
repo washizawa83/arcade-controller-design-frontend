@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b1120; /* deep slate */
+  --foreground: #e2e8f0; /* slate-200 */
 }
 
 @theme inline {
@@ -13,6 +13,10 @@
   --spacing-gap: 12px;
   --spacing-content: calc(100svh - var(--spacing-header) - var(--spacing-gap));
   --font-mono: var(--font-geist-mono);
+  /* Neon palette */
+  --color-neon: #ff355d;
+  --color-panel: rgba(15, 23, 42, 0.6);
+  --color-panel-border: rgba(255, 53, 93, 0.25);
 }
 
 body {

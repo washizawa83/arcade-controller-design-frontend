@@ -1,15 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <style>
-      .a{fill:none;stroke:#334155;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
-      .b{fill:#f87171}
-    </style>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect x="12" y="20" width="104" height="72" rx="10" class="a"/>
-  <rect x="28" y="36" width="72" height="40" rx="6" class="a"/>
-  <circle cx="32" cy="100" r="8" class="b"/>
-  <circle cx="56" cy="100" r="8" class="b"/>
-  <circle cx="80" cy="100" r="8" class="b"/>
-  <circle cx="104" cy="100" r="8" class="b"/>
+  <!-- pcb board -->
+  <rect x="8" y="12" width="112" height="84" rx="10" fill="rgba(15,23,42,0.6)" stroke="#94a3b8" stroke-width="2"/>
+  <!-- traces -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <path d="M24 40 h20 v16 h24"/>
+    <path d="M24 60 h28 v8 h28" opacity="0.8"/>
+  </g>
+  <!-- pads (neon) -->
+  <g filter="url(#glow)" fill="#ff355d">
+    <circle cx="24" cy="40" r="4"/>
+    <circle cx="44" cy="56" r="4"/>
+    <circle cx="72" cy="56" r="4"/>
+    <circle cx="104" cy="56" r="4"/>
+  </g>
+  <text x="12" y="108" fill="#cbd5e1" font-size="10" font-weight="600">KiCad export</text>
 </svg>
 

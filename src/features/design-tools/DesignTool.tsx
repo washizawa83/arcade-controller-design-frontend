@@ -1,10 +1,9 @@
 "use client";
 
-"use client";
-
 import { useRef, useState } from "react";
 import { Canvas } from "./Canvas";
 import { SelectButtonList } from "./SelectButtonList";
+import { NeonButton } from "@/app/components/ui/NeonButton";
 
 type ChangeListener = () => void;
 
@@ -376,36 +375,35 @@ export const DesignTool = () => {
       <div className="flex-1 min-w-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between pb-2">
           <div className="w-full md:w-auto">
-            <button
-              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900 disabled:opacity-50"
+            <NeonButton
+              className="w-full md:w-40"
               onClick={handleGenerate}
               disabled={isSending}
+              variant="primary"
+              color="green"
             >
               {isSending ? "送信中..." : "基盤データを生成"}
-            </button>
+            </NeonButton>
           </div>
           <div className="flex w-full md:w-auto flex-col md:flex-row gap-2">
-            <button
-              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+            <NeonButton
+              className="w-full md:w-40"
               onClick={() => storeRef.current.reset(DEFAULT_BUTTONS)}
-              type="button"
             >
               初期配置に戻す
-            </button>
-            <button
-              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+            </NeonButton>
+            <NeonButton
+              className="w-full md:w-40"
               onClick={() => setShowMarkers((v) => !v)}
-              type="button"
             >
               {showMarkers ? "目印を隠す" : "目印を表示"}
-            </button>
-            <button
-              className="w-full md:w-40 shrink-0 text-center rounded-md border border-slate-400/60 bg-slate-100/80 px-3 py-1 text-xs text-slate-700 shadow-sm transition-colors hover:border-sky-400 hover:text-slate-900"
+            </NeonButton>
+            <NeonButton
+              className="w-full md:w-40"
               onClick={() => setShowLabels((v) => !v)}
-              type="button"
             >
               {showLabels ? "ボタン名を隠す" : "ボタン名を表示"}
-            </button>
+            </NeonButton>
           </div>
         </div>
         <Canvas

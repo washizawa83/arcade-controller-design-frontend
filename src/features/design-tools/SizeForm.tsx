@@ -17,7 +17,7 @@ export const SizeForm = ({ button, label, value, onChange }: Props) => {
     <div className="inline-flex w-[70px] flex-col gap-1">
       <label
         htmlFor={`${button.uid}-${label}`}
-        className="text-[10px] uppercase tracking-wide text-slate-700"
+        className="text-[10px] uppercase tracking-wide text-slate-300"
       >
         {label}
       </label>

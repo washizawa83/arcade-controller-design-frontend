@@ -12,11 +12,11 @@ export const SelectButton = ({ button, store }: Props) => {
   return (
     <div
       className={
-        "w-full rounded-md border px-3 py-3 text-left shadow-sm transition-colors duration-150 " +
+        "w-full rounded-md border px-3 py-3 text-left shadow-[0_0_6px_rgba(255,53,93,0.25)] transition-colors duration-150 " +
         (isSelected
-          ? "border-red-400 ring-2 ring-red-500/40"
-          : "border-slate-600 hover:border-red-400") +
-        " bg-slate-100/80"
+          ? "border-pink-400 ring-2 ring-pink-500/30"
+          : "border-pink-500/30 hover:border-pink-400") +
+        " bg-[rgba(15,23,42,0.6)]"
       }
     >
       <div
@@ -26,8 +26,8 @@ export const SelectButton = ({ button, store }: Props) => {
           else store.setSelectedExclusive(button.uid);
         }}
       >
-        <h3 className="text-sm font-semibold text-slate-600">{button.name}</h3>
-        <span className="rounded bg-slate-700/60 px-2 py-0.5 text-[10px] font-mono text-slate-200">
+        <h3 className="text-sm font-semibold text-slate-100">{button.name}</h3>
+        <span className="rounded bg-pink-500/20 border border-pink-500/30 px-2 py-0.5 text-[10px] font-mono text-pink-100">
           {button.id}
         </span>
       </div>

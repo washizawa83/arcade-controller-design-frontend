@@ -186,18 +186,28 @@ export const Canvas = ({
         const radius = btn.d / 2;
         const isSquare = radius === 9; // 18mm 指定は四角で描画
         const isSelected = storeRef.current.isSelected(btn.uid);
+        const neonStroke = "#ff355d"; // ネオン系の赤（蛍光っぽい）
+        const neonFill = "rgba(255,53,93,0.22)"; // 半透明の赤
+        ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = "#f87171"; // red-400
         if (isSquare) {
           const size = btn.d; // 直径と同じ一辺
           ctx.rect(btn.x - radius, btn.y - radius, size, size);
         } else {
           ctx.arc(btn.x, btn.y, radius, 0, Math.PI * 2);
         }
+        // glow
+        ctx.shadowColor = "rgba(255,53,93,0.55)";
+        ctx.shadowBlur = (isSelected ? 7 : 5) / scale;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        // fill and stroke
+        ctx.fillStyle = neonFill;
         ctx.fill();
-        ctx.strokeStyle = isSelected ? "#ffb1b1" : "#ef4444"; // selected: amber-500
-        ctx.lineWidth = isSelected ? 3 / scale : 1.5 / scale;
+        ctx.strokeStyle = neonStroke;
+        ctx.lineWidth = isSelected ? 3 / scale : 1.6 / scale;
         ctx.stroke();
+        ctx.restore();
 
         // Draw button label badge (design-focused)
         const label = btn.name || btn.id;

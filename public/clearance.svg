@@ -1,14 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <style>
-      .a{fill:none;stroke:#334155;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
-      .b{fill:#f87171;opacity:.15}
-      .c{fill:none;stroke:#f87171;stroke-width:6}
-    </style>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect x="16" y="16" width="96" height="56" rx="8" class="a"/>
-  <circle cx="96" cy="96" r="20" class="c"/>
-  <path class="a" d="M80 72l20 20"/>
-  <path class="b" d="M74 74l22 22a20 20 0 0 1-28 0a20 20 0 0 1 6-22z"/>
+  <!-- board frame -->
+  <rect x="8" y="12" width="112" height="84" rx="8" fill="rgba(15,23,42,0.6)" stroke="#94a3b8" stroke-width="2"/>
+  <!-- two buttons with clearance space indicator -->
+  <g filter="url(#glow)">
+    <circle cx="44" cy="54" r="12" fill="rgba(255,53,93,0.18)" stroke="#ff355d" stroke-width="4"/>
+    <circle cx="84" cy="54" r="12" fill="rgba(255,53,93,0.18)" stroke="#ff355d" stroke-width="4"/>
+  </g>
+  <!-- clearance bracket and label -->
+  <g stroke="#ff355d" stroke-width="2" filter="url(#glow)" fill="none">
+    <path d="M56 54 h16"/>
+    <path d="M56 50 v8 M72 50 v8"/>
+  </g>
+  <text x="57" y="48" fill="#cbd5e1" font-size="9" font-weight="600">clearance</text>
 </svg>
 

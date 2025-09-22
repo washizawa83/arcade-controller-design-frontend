@@ -1,12 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <style>
-      .a{fill:none;stroke:#f87171;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
-      .b{fill:none;stroke:#334155;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
-    </style>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <circle cx="64" cy="64" r="26" class="b"/>
-  <path class="a" d="M64 10v18M64 100v18M10 64h18M100 64h18"/>
-  <path class="a" d="M27 27l13 13M88 88l13 13M27 101l13-13M88 40l13-13"/>
+  <!-- canvas frame -->
+  <rect x="8" y="12" width="112" height="84" rx="8" fill="rgba(15,23,42,0.6)" stroke="#94a3b8" stroke-width="2"/>
+  <!-- original button (larger) -->
+  <circle cx="40" cy="56" r="16" fill="rgba(255,53,93,0.2)" stroke="#ff355d" stroke-width="6" filter="url(#glow)"/>
+  <!-- ghost (destination) with dash (larger) -->
+  <circle cx="90" cy="76" r="16" fill="none" stroke="#ff355d" stroke-width="3" stroke-dasharray="5 4" opacity="0.95"/>
+  <!-- motion path arrow (thicker) -->
+  <g filter="url(#glow)" stroke="#ff355d" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M56 60 C74 64, 78 68, 86 72"/>
+    <path d="M86 72 l-8 -4 3 9"/>
+  </g>
+  <!-- hand cursor -->
+  <g transform="translate(74,56)" filter="url(#glow)">
+    <path d="M10 6 v10 l-3 -2 -3 4 7 12 c3 4 8 4 11 0 l7 -9 -4 -3 -4 5 -1 -15 c0 -3 -2 -4 -4 -4 s-3 1 -3 3 v8 l-1 -9 c0 -3 -2 -4 -4 -4 s-3 1 -3 3z" fill="#ff355d" opacity="0.95"/>
+  </g>
+  <!-- label -->
+  <text x="10" y="112" fill="#cbd5e1" font-size="11" font-weight="700">Drag &amp; Drop a button</text>
 </svg>
 

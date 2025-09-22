@@ -52,7 +52,7 @@ export const PositionForm = ({
     <div className="inline-flex w-[76px] flex-col gap-1">
       <label
         htmlFor={`${button.uid}-${label}`}
-        className="text-[10px] uppercase tracking-wide text-slate-700"
+        className="text-[10px] uppercase tracking-wide text-slate-300"
       >
         {label}
       </label>
