@@ -312,12 +312,10 @@ export const DesignTool = () => {
   const [isSending, setIsSending] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
 
-  const BACKEND_BASE =
-    (typeof window !== "undefined" &&
-      (window as any).NEXT_PUBLIC_BACKEND_BASE) ||
-    process.env.NEXT_PUBLIC_BACKEND_BASE ||
-    "http://localhost:8000";
+  const API_BASE =
+    process.env.NEXT_PUBLIC_BACKEND_ENDPOINT || "http://localhost:8080";
 
+  console.log(API_BASE);
   const handleGenerate = async () => {
     if (isSending) return;
     setIsSending(true);
@@ -330,17 +328,14 @@ export const DesignTool = () => {
         size: b.d,
       }));
       const payload = { switches, units: "mm" };
-      const res = await fetch(
-        `${BACKEND_BASE}/api/v1/pcb/generate-design-data`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/zip,application/octet-stream",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`${API_BASE}/api/v1/pcb/generate-design-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/zip,application/octet-stream",
+        },
+        body: JSON.stringify(payload),
+      });
       if (!res.ok) {
         const text = await res.text().catch(() => "");
         throw new Error(`Request failed: ${res.status} ${text}`);
