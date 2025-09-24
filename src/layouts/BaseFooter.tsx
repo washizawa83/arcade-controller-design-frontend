@@ -29,6 +29,11 @@ export const BaseFooter = () => {
                   プライバシーポリシー
                 </Link>
               </li>
+              <li>
+                <Link href="/oss" className="hover:text-pink-400">
+                  OSSライセンス
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
