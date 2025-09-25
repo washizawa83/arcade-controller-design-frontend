@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Canvas } from "./Canvas";
 import { SelectButtonList } from "./SelectButtonList";
 import { NeonButton } from "@/app/components/ui/NeonButton";
+import { generateData } from "@/app/service/api";
 
 type ChangeListener = () => void;
 
@@ -312,45 +313,28 @@ export const DesignTool = () => {
   const [isSending, setIsSending] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
 
-  const API_BASE =
-    process.env.NEXT_PUBLIC_BACKEND_ENDPOINT || "http://localhost:8080";
-
-  console.log(API_BASE);
   const handleGenerate = async () => {
     if (isSending) return;
     setIsSending(true);
     try {
-      const switches = storeRef.current.getAll().map((b) => ({
+      const controllerButtons = storeRef.current.getAll();
+      const switches = controllerButtons.map((b) => ({
         x_mm: b.x,
         y_mm: b.y,
         rotation_deg: 0,
         ref: b.id,
         size: b.d,
       }));
-      const payload = { switches, units: "mm" };
-      const res = await fetch(`${API_BASE}/api/v1/pcb/generate-design-data`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/zip,application/octet-stream",
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`Request failed: ${res.status} ${text}`);
-      }
-      // Download returned KiCad project (zip or binary)
-      const blob = await res.blob();
-      const cd = res.headers.get("Content-Disposition") || "";
-      const match = cd.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/);
-      const filename =
-        (match && (decodeURIComponent(match[1] || match[2]) || "")) ||
-        "design-data.zip";
+      const { filename, base64, contentType } = await generateData(switches);
+
+      // Create Blob from base64 and trigger download
+      const blob = await fetch(`data:${contentType};base64,${base64}`).then(
+        (r) => r.blob()
+      );
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = filename;
+      a.download = filename || "design-data.zip";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -362,6 +346,7 @@ export const DesignTool = () => {
       setIsSending(false);
     }
   };
+
   return (
     <div
       className="w-full flex flex-col md:flex-row gap-4"
