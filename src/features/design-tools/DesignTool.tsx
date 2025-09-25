@@ -357,7 +357,7 @@ export const DesignTool = () => {
       setTimeout(() => URL.revokeObjectURL(url), 0);
     } catch (err) {
       console.error(err);
-      alert("送信に失敗しました。バックエンドが起動しているかご確認ください。");
+      alert("生成に失敗しました。時間を置いて再度生成してください。");
     } finally {
       setIsSending(false);
     }
@@ -377,7 +377,14 @@ export const DesignTool = () => {
               variant="primary"
               color="green"
             >
-              {isSending ? "送信中..." : "基盤データを生成"}
+              {isSending ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-emerald-200 border-t-transparent" />
+                  生成中...
+                </span>
+              ) : (
+                "基盤データを生成"
+              )}
             </NeonButton>
           </div>
           <div className="flex w-full md:w-auto flex-col md:flex-row gap-2">

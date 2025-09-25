@@ -1,3 +1,4 @@
+import { HeaderMenuLink } from "@/app/components/ui/HeaderMenuLink";
 import Link from "next/link";
 
 export const BaseHeader = async () => {
@@ -20,28 +21,13 @@ export const BaseHeader = async () => {
         </div>
         <ul className="flex items-center gap-6 text-sm text-slate-200">
           <li>
-            <Link
-              href="/"
-              className="px-2 py-1 rounded-md hover:text-pink-400 hover:bg-pink-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/30 transition-colors"
-            >
-              Home
-            </Link>
+            <HeaderMenuLink label="Home" href="/" />
           </li>
           <li>
-            <Link
-              href="/generate"
-              className="px-2 py-1 rounded-md hover:text-pink-400 hover:bg-pink-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/30 transition-colors"
-            >
-              Generate
-            </Link>
+            <HeaderMenuLink label="Generate" href="/generate" />
           </li>
           <li>
-            <Link
-              href="/document"
-              className="px-2 py-1 rounded-md hover:text-pink-400 hover:bg-pink-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/30 transition-colors"
-            >
-              Document
-            </Link>
+            <HeaderMenuLink label="Document" href="/document" />
           </li>
         </ul>
       </div>
