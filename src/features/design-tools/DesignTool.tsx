@@ -368,7 +368,7 @@ export const DesignTool = () => {
                   生成中...
                 </span>
               ) : (
-                "基盤データを生成"
+                "基板データを生成"
               )}
             </NeonButton>
           </div>

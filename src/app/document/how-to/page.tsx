@@ -20,8 +20,8 @@ export default function HowToPage() {
           ボタン配置について
         </h2>
         <p className="mt-2 text-slate-300 text-sm md:text-base leading-relaxed md:leading-loose">
-          <BaseLink href="/generate" label="基盤生成画面" />
-          からボタン配置と基盤データの生成を行うことができます。
+          <BaseLink href="/generate" label="基板生成画面" />
+          からボタン配置と基板データの生成を行うことができます。
         </p>
         <h3 className="font-bold">ボタンの配置方法</h3>
         <p className="mt-2 text-slate-300 text-sm md:text-base leading-relaxed md:leading-loose">
@@ -98,10 +98,10 @@ export default function HowToPage() {
 
       <section id={exportId} className="mt-8">
         <h2 className="text-lg font-semibold text-slate-100">
-          基盤データの生成
+          基板データの生成
         </h2>
         <ol className="mt-2 list-decimal pl-5 text-slate-300 text-sm md:text-base space-y-1">
-          <li>配置を確認し、「基盤データを生成」をクリックします。</li>
+          <li>配置を確認し、「基板データを生成」をクリックします。</li>
           <li>ZIP（KiCadプロジェクト）がダウンロードされます。</li>
           <li>
             必要に応じてKiCadで編集し、発注用データ（Gerber等）を書き出してください。

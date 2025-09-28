@@ -43,7 +43,7 @@ export default function DocumentLayout({
                     className="hover:text-pink-400"
                     href="/document/how-to#export"
                   >
-                    基盤データの生成
+                    基板データの生成
                   </Link>
                 </li>
               </ul>
@@ -66,7 +66,7 @@ export default function DocumentLayout({
                     className="hover:text-pink-400"
                     href="/document/order#pcb"
                   >
-                    基盤の注文方法
+                    基板の注文方法
                   </Link>
                 </li>
               </ul>

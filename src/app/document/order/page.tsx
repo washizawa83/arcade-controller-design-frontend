@@ -15,7 +15,7 @@ export default function OrderPage() {
         </p>
       </section>
       <section id={pcbId} className="mt-8">
-        <h2 className="text-lg font-semibold text-slate-100">基盤の注文方法</h2>
+        <h2 className="text-lg font-semibold text-slate-100">基板の注文方法</h2>
         <p className="mt-2 text-slate-300 text-sm md:text-base">
           各PCBメーカーのガイドラインに従い、必要なファイル形式（Gerber等）で書き出して発注します。
         </p>
