@@ -25,17 +25,25 @@ export default function DocumentLayout({
                 <li>
                   <Link
                     className="hover:text-pink-400"
-                    href="/document/how-to#place"
+                    href="/document/how-to#editor"
                   >
-                    ボタン配置方法
+                    エディターの使い方
                   </Link>
                 </li>
                 <li>
                   <Link
                     className="hover:text-pink-400"
-                    href="/document/how-to#features"
+                    href="/document/how-to#buttonEditor"
                   >
-                    各機能の使い方
+                    ボタンエディターの使い方
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="hover:text-pink-400"
+                    href="/document/how-to#editorMenu"
+                  >
+                    エディターメニューの使い方
                   </Link>
                 </li>
                 <li>
@@ -58,7 +66,7 @@ export default function DocumentLayout({
                     className="hover:text-pink-400"
                     href="/document/order#kicad"
                   >
-                    出力されたKiCadデータの使用方法
+                    基板製造用データの作成方法
                   </Link>
                 </li>
                 <li>
