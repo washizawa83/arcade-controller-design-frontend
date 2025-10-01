@@ -26,26 +26,45 @@ export const PositionForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = e.target.value;
-    setText(next);
-    if (next === "") return; // allow clearing while editing
-    const num = Number(next);
-    if (Number.isFinite(num)) {
-      const rounded = Math.round(num * 10) / 10;
-      if (store) {
-        if (label === "X")
-          store.moveWithConstraint(button.uid, rounded, button.y);
-        else if (label === "Y")
-          store.moveWithConstraint(button.uid, button.x, rounded);
-      } else {
-        onChange(rounded);
-      }
+  const commit = () => {
+    if (text === "") {
+      // revert to last valid value if empty
+      setText(String(value));
+      return;
+    }
+    const num = Number(text);
+    if (!Number.isFinite(num)) {
+      // invalid -> revert
+      setText(String(value));
+      return;
+    }
+    const rounded = Math.round(num * 10) / 10;
+    if (store) {
+      if (label === "X")
+        store.moveWithConstraint(button.uid, rounded, button.y);
+      else if (label === "Y")
+        store.moveWithConstraint(button.uid, button.x, rounded);
+    } else {
+      onChange(rounded);
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value;
+    // Only update local text while editing; do not commit yet
+    setText(next);
+  };
+
   const handleBlur = () => {
-    if (text === "") setText(String(value)); // revert to last valid value
+    commit();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      commit();
+      // Do not blur forcibly; let user continue if needed.
+    }
   };
 
   return (
@@ -63,6 +82,7 @@ export const PositionForm = ({
         step="0.1"
         onChange={handleChange}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         value={text}
       />
     </div>
