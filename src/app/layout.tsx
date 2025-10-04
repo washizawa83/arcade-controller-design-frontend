@@ -22,8 +22,9 @@ const brandFont = Quicksand({
 });
 
 export const metadata: Metadata = {
-  title: "Generate Arcade Controller Design",
-  description: "Generate Arcade Controller Design",
+  title: "Modern Design",
+  description:
+    "自作薄型レバーレスコントローラーの作成をサポートするサービスです。ボタン配置をドラッグ＆ドロップで直感的にデザインすることができます。理想のボタンレイアウトが完成したらワンボタンで基板の設計を行うことなくホットスワップ可能なレバーレスコントローラーのCADデータを生成することができます。",
 };
 
 export default function RootLayout({

@@ -337,6 +337,8 @@ export const Canvas = ({
     };
 
     const onPointerDown = (e: PointerEvent) => {
+      // Prevent page scroll on touch devices when interacting with canvas
+      if (e.pointerType === "touch" && e.cancelable) e.preventDefault();
       const { x, y } = toLogical(e.clientX, e.clientY);
       const hit = hitTest(x, y);
       if (hit) {
@@ -472,6 +474,8 @@ export const Canvas = ({
     };
 
     const onPointerMove = (e: PointerEvent) => {
+      // On touch devices, keep default scrolling suppressed during drag
+      if (e.pointerType === "touch" && e.cancelable) e.preventDefault();
       if (!isDraggingGroupRef.current || draggingIdRef.current == null) return;
       const { x, y } = toLogical(e.clientX, e.clientY);
       if (!dragStartRef.current) return;
@@ -521,8 +525,8 @@ export const Canvas = ({
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(parent);
-    canvas.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
+    window.addEventListener("pointermove", onPointerMove); // default passive
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointerdown", onWindowPointerDown, {
       capture: true,
@@ -547,6 +551,7 @@ export const Canvas = ({
         width: "100%",
         height: "auto",
         display: "block",
+        touchAction: "none", // disable browser gestures (pan/zoom) on canvas
       }}
     />
   );
