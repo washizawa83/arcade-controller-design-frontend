@@ -12,12 +12,15 @@ export const BaseHeader = async () => {
       }}
     >
       <div className="mx-auto w-11/12 2xl:w-[1280px] flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <h1 className="text-xl md:text-2xl tracking-wide text-slate-100 [font-family:var(--font-brand)]">
             <Link href="/" className="hover:text-pink-400 transition-colors">
               Modern <span className="text-pink-400">Design</span>
             </Link>
           </h1>
+          <span className="inline-flex items-center rounded-full border border-pink-500/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-pink-300 bg-white/5 shadow-[0_0_6px_rgba(255,53,93,0.25)]">
+            Demo
+          </span>
         </div>
         <ul className="flex items-center gap-6 text-sm text-slate-200">
           <li>
