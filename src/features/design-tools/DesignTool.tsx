@@ -12,6 +12,32 @@ type ChangeListener = () => void;
 export type ButtonSizeMm = 18 | 24 | 30;
 export const BUTTON_SIZES_MM: ButtonSizeMm[] = [18, 24, 30];
 
+// Map nominal sizes (label) to actual drawn/used diameters
+export const NOMINAL_TO_ACTUAL: Record<ButtonSizeMm, number> = {
+  18: 18,
+  24: 20.7,
+  30: 26.0,
+};
+
+export const nominalFromDiameter = (d: number): ButtonSizeMm => {
+  // Choose the closest actual to the given diameter
+  const pairs: Array<[ButtonSizeMm, number]> = [
+    [18, NOMINAL_TO_ACTUAL[18]],
+    [24, NOMINAL_TO_ACTUAL[24]],
+    [30, NOMINAL_TO_ACTUAL[30]],
+  ];
+  let best: ButtonSizeMm = 24;
+  let bestDiff = Infinity;
+  for (const [label, actual] of pairs) {
+    const diff = Math.abs(d - actual);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = label;
+    }
+  }
+  return best;
+};
+
 export type ButtonInit = {
   id: string;
   name: string;
@@ -69,7 +95,8 @@ export class ControllerButton {
     this.emitChange();
   }
   setSizeMm(size: ButtonSizeMm): void {
-    this._d = size;
+    // Convert nominal to actual diameter
+    this._d = NOMINAL_TO_ACTUAL[size];
     this.emitChange();
   }
   setDiameter(diameter: number): void {
@@ -151,7 +178,11 @@ export class ButtonStore {
       name: spec.name,
       x: spec.x,
       y: spec.y,
-      d: spec.d ?? 24,
+      // If provided diameter matches a nominal label, convert to actual
+      d:
+        spec.d === 18 || spec.d === 24 || spec.d === 30
+          ? NOMINAL_TO_ACTUAL[spec.d as ButtonSizeMm]
+          : (spec.d ?? NOMINAL_TO_ACTUAL[24]),
     });
     btn.subscribe(() => this.emitChange());
     this.buttons.push(btn);
@@ -325,7 +356,8 @@ export const DesignTool = () => {
         y_mm: b.y,
         rotation_deg: 0,
         ref: b.id,
-        size: b.d,
+        // Send nominal size (18/24/30) to API
+        size: nominalFromDiameter(b.d),
       }));
       const { filename, base64, contentType } = await generateData(switches);
 

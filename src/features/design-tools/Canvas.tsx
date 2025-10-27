@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ButtonStore, ControllerButton, DEFAULT_BUTTONS } from "./DesignTool";
+import {
+  ButtonStore,
+  ControllerButton,
+  DEFAULT_BUTTONS,
+  NOMINAL_TO_ACTUAL,
+} from "./DesignTool";
 
 const LOGICAL_WIDTH = 300;
 const LOGICAL_HEIGHT = 200;
@@ -137,7 +142,12 @@ export const Canvas = ({
         ctx.strokeStyle = "#38bdf8"; // sky-400
         ctx.lineWidth = 1 / scale;
         for (const def of DEFAULT_BUTTONS) {
-          const radius = (def.d ?? 24) / 2;
+          const nominal = def.d ?? 24;
+          const dia =
+            nominal === 18 || nominal === 24 || nominal === 30
+              ? NOMINAL_TO_ACTUAL[nominal as 18 | 24 | 30]
+              : nominal;
+          const radius = dia / 2;
           ctx.beginPath();
           if (radius === 9) {
             const size = radius * 2;
