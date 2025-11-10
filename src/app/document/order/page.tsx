@@ -4,6 +4,8 @@ import Image from "next/image";
 export default function OrderPage() {
   const kicadId = "kicad";
   const pcbId = "pcb";
+  const housingId = "housing";
+
   return (
     <div className="rounded-lg border border-pink-500/30 bg-[var(--color-panel)] p-6 md:p-8 shadow-[0_0_8px_rgba(255,53,93,0.25)]">
       <h1 className="text-xl md:text-2xl font-semibold text-slate-100">
@@ -21,14 +23,14 @@ export default function OrderPage() {
           基板製造用データの作成方法
         </h2>
         <p className="mt-2 mb-8 text-slate-300 text-sm md:text-base">
-          解凍したZIPファイル内にある StickLess.kicad_pcb
-          をダブルクリックしてKiCadで開いてください。
+          解凍したZIPファイル内（以降 「design-data」フォルダ と記載）にある
+          StickLess.kicad_pcb をダブルクリックしてKiCadで開いてください。
           <br />
           PCBエディターが立ち上がり基板が表示されます。ボタン配置が反映されていることを確認してください。
         </p>
         <ol className="mb-8 list-decimal pl-5 text-slate-300 text-sm md:text-base space-y-1">
           <li>
-            PCBエディターの「メニュー」から「製造用出力」 →
+            PCBエディターの「メニュー」から「ファイル」→「製造用出力」 →
             「ガーバー」を選択してください
           </li>
           <li>
@@ -39,7 +41,7 @@ export default function OrderPage() {
           </li>
           <li>最後に「プロット」ボタンをクリックしてください</li>
           <li>
-            「出力メッセージ」のエラー件数が0であることを確認し、「ドリルファイルの生成」ボタンをクリックしてください
+            「出力メッセージ」のエラー件数が0であることを確認し、最後に「ドリルファイルの生成」ボタンをクリックしてください。
           </li>
         </ol>
         <Image
@@ -74,6 +76,53 @@ export default function OrderPage() {
             注文の各項目について変更は必要ありませんが、必要に応じて基板の色、厚みを変更してください。
           </li>
         </ol>
+      </section>
+      <section id={housingId} className="mt-8">
+        <h2 className="text-lg font-semibold text-slate-100">
+          外枠（アクリル板）の発注方法
+        </h2>
+        <p className="mt-2 text-slate-300 text-sm md:text-base">
+          外枠（アクリル板）の発注方法について紹介します。
+        </p>
+        <div className="mt-3 rounded-md border-l-4 border-sky-400 bg-sky-500/10 p-3 text-xs md:text-sm text-slate-200 leading-relaxed md:leading-loose">
+          ヒント:
+          外枠に関してはご自身のお好みの素材でご自由に作成していただいて問題ございません。
+          アクリル板を使用した制作を考えている場合はご参考にしてください。
+        </div>
+        <p className="mt-2 text-slate-300 text-sm md:text-base">
+          「design-data」フォルダ内にある「housing-data」フォルダに以下のアクリル板加工データがあります。
+        </p>
+        <ol className="mb-8 list-decimal pl-5 text-slate-300 text-sm md:text-base space-y-1">
+          <li>
+            「layer1.pdf」：ボタン配置、取り付け穴が反映されたアクリル板加工データ
+          </li>
+          <li>
+            「layer2.pdf」：ボタン配置、raspberry
+            pi、取り付け穴が反映されたアクリル板加工データ
+          </li>
+          <li>「layer3.pdf」：取り付け穴が反映されたアクリル板加工データ</li>
+        </ol>
+        <p className="mt-2 text-slate-300 text-sm md:text-base">
+          アクリル板の発注は
+          <BaseLink href="https://anymany.net/" label="Anymany" />
+          を利用した方法について紹介します。
+        </p>
+        <ol className="mb-8 list-decimal pl-5 text-slate-300 text-sm md:text-base space-y-1">
+          <li>
+            Anymanyのサイトにアクセスし、「スピード注文」を選択してください
+          </li>
+          <li>アクリル板加工データのアップロードし、素材と個数を入力します</li>
+          <li>各レイヤーごとに同様の操作をして注文を行います</li>
+        </ol>
+        <p className="mt-2 text-slate-300 text-sm md:text-base">
+          参考に私が注文した際の内容を記載します。
+        </p>
+        <Image
+          src="/document/order/order-img2.png"
+          alt="Anymany注文画面"
+          width={800}
+          height={500}
+        />
       </section>
     </div>
   );

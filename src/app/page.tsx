@@ -57,7 +57,7 @@ export default function Home() {
             <p className="mt-4 text-slate-300 md:text-lg">
               ボタン配置をドラッグ＆ドロップで直感的にデザインすることができます。
               <br />
-              理想のボタンレイアウトが完成したらワンボタンで基板の設計を行うことなくホットスワップ可能な
+              理想のボタンレイアウトが完成したらワンボタンで基板の設計を行うことなく
               <span className="text-pink-400">レバーレスコントローラー</span>
               のCADデータを生成することができます。
             </p>

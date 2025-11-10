@@ -138,6 +138,16 @@ export default function DocumentLayout({
                     <span className="text-pink-400/60">›</span>
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    className="flex items-center justify-between rounded-md px-3 py-2 hover:bg-white/5 hover:text-pink-300 transition"
+                    href="/document/order#housing"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span>外枠（アクリル板）の発注方法</span>
+                    <span className="text-pink-400/60">›</span>
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
