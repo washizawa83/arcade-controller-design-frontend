@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { Canvas } from "./Canvas";
 import { SelectButtonList } from "./SelectButtonList";
 import { NeonButton } from "@/app/components/ui/NeonButton";
-import { ConfirmDialog } from "@/app/components/ui/ConfirmDialog";
 import { generateData } from "@/app/service/api";
 
 type ChangeListener = () => void;
@@ -344,7 +343,6 @@ export const DesignTool = () => {
   const [showMarkers, setShowMarkers] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleGenerate = async () => {
     if (isSending) return;
@@ -381,12 +379,7 @@ export const DesignTool = () => {
     }
   };
 
-  const openConfirm = () => setConfirmOpen(true);
-  const closeConfirm = () => setConfirmOpen(false);
-  const confirmAndGenerate = async () => {
-    setConfirmOpen(false);
-    await handleGenerate();
-  };
+  // confirmation dialog removed after verification
 
   return (
     <div
@@ -398,7 +391,7 @@ export const DesignTool = () => {
           <div className="w-full md:w-auto">
             <NeonButton
               className="w-full md:w-40"
-              onClick={openConfirm}
+              onClick={handleGenerate}
               disabled={isSending}
               variant="primary"
               color="green"
@@ -443,16 +436,7 @@ export const DesignTool = () => {
       <div className="w-full md:w-[270px] shrink-0">
         <SelectButtonList store={storeRef.current} />
       </div>
-      <ConfirmDialog
-        open={confirmOpen}
-        title="確認"
-        message="この機能はデモ段階です。実機での動作検証は未完了ですが、基板データを生成しますか？"
-        confirmLabel="生成する"
-        cancelLabel="やめる"
-        onConfirm={confirmAndGenerate}
-        onCancel={closeConfirm}
-        busy={isSending}
-      />
+      {/* confirmation dialog removed */}
     </div>
   );
 };
