@@ -24,7 +24,7 @@ export default function ConstructionPage() {
           3x15mmのボルトであれば基本的に対応可能です。
         </p>
         <LinkPreview
-          url="https://www.amazon.co.jp/PATIKIL-%E3%82%B7%E3%82%AB%E3%82%B4%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%A5%E3%83%BC-%E3%82%B9%E3%83%90%E3%82%A4%E3%83%B3%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0%E3%83%9D%E3%82%B9%E3%83%88%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%A5%E3%83%BC%E3%83%9C%E3%83%AB%E3%83%88-%E3%83%AC%E3%82%B6%E3%83%BC%E3%83%AA%E3%83%99%E3%83%83%E3%83%88304%E3%82%B9%E3%83%86%E3%83%B3%E3%83%AC%E3%82%B9%E3%82%B9%E3%83%81%E3%83%BC%E3%83%AB%E3%83%95%E3%82%A1%E3%82%B9%E3%83%8A%E3%83%BC-%E3%82%B9%E3%82%AF%E3%83%A9%E3%81%A3%E3%83%97%E3%83%96%E3%83%83%E3%82%AF/dp/B0F4CWYSYJ/ref=sr_1_2?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=11MJBMEWQFL60&dib=eyJ2IjoiMSJ9.gw-FEGvUScZHCJ8p3w5e135_r1xMRYx1cs_h4QsEafRee9P-5qhOzyX8XF7fiHu3DkBY67IgptIn2E_Alg9KNsNqt43NTnES2rQtYZiL3N5pXS_mj0EHdTVO7PJwR8t_P1j1aRJ63qdJ0SZe5oDMBrXSQkvkiR9vcAQXsv18Is9e0apxbB3dG3MTSE277dTU_Uix3TwKCl4oeBQrClLxg6FWXrKdW9O3rqi_hRXX9tgPn-8QGFN1friHEfPX4sVuEXGvaSkvA_d10S10PHmJ47wW_YATakv82L1LcLLxu-M.eytntyRVg4ANE9GoZJG88VogwZ4RvsK_bTnhwhvlIEk&dib_tag=se&keywords=3x15+%E3%83%9C%E3%83%AB%E3%83%88&qid=1762694142&sprefix=3x15+%E3%83%9C%E3%83%AB%E3%83%88%2Caps%2C189&sr=8-2&ufe=app_do%3Aamzn1.fos.d8e7ee72-073f-4b97-8ec0-59c18d6dfebe"
+          url="https://www.amazon.co.jp/%E3%82%AA%E3%83%8E%E3%82%AB%E3%83%84-%E3%82%B9%E3%83%86%E3%83%B3%E3%83%AC%E3%82%B9-%E5%85%AD%E8%A7%92%E7%A9%B4%E4%BB%98%E3%83%9C%E3%83%AB%E3%83%88-M3x15-134-00-M3x15/dp/B09Q28ZV3G/ref=sr_1_1_sspa?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=2SZEV9JD86PO4&dib=eyJ2IjoiMSJ9.fwbBKfWXoUY_Dwmp9qbYoMNAS1zQHKQyE8oWkWT2Y3J590_hlFKV01_scz0TtpOC5-AEFLNJkM4PDa6pENaENcE7iFe2fSZ-4Vs9HgEw1LP0NDzOL_4Hma65D_h7f-QsWUJw5dtRa0-OaQt1ucIBs3i1QddNHzYA0SjegQvNWMP2x0c84UbU6ACyFbat0i24YDoLu4gOrYL_x8ihL_1wTwWqqdjXNlva2va4mJy6DRri_Dxj1gwK1lY8a9_Gk16zmPYk4kbSqKjoE1je8n-RT532bmdssPFYFKWcL1L4XOg.1tgJhNZeCtB_A_5-ITAq9ZJDcKSInfNdcV07-2gLeIM&dib_tag=se&keywords=3%2Bx%2B15%2B%E3%83%9C%E3%83%AB%E3%83%88&qid=1763950586&sprefix=3%2Bx%2B15%2B%E3%83%9C%E3%83%AB%E3%83%88%2Caps%2C178&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1"
           label="Amazon 固定ボルト"
           className="mt-3"
         />
@@ -86,15 +86,9 @@ export default function ConstructionPage() {
           が必要な場合は「RP2040-Plus」を購入してください。
         </p>
         <div className="mt-3 rounded-md border-l-4 border-sky-400 bg-sky-500/10 p-3 text-xs md:text-sm text-slate-200 leading-relaxed md:leading-loose">
-          ヒント: RP2040-Plus は互換性があるため、Raspberry Pi Pico
-          と同じように使用できます。
+          ヒント: 通常のRaspberry Pi Pico
+          のType-B端子は接続が悪いため「RP2040-Plus」をおすすめします。
         </div>
-        <LinkPreview
-          url="https://www.amazon.co.jp/dp/B08TQSDP28?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1"
-          label="Amazon Raspberry Pi Pico"
-          className="mt-3"
-        />
-        <br />
         <LinkPreview
           url="https://www.amazon.co.jp/dp/B09LT4V2VS?ref=ppx_yo2ov_dt_b_fed_asin_title"
           label="Amazon RP2040-Plus"
@@ -193,6 +187,13 @@ export default function ConstructionPage() {
           <li>layer2のアクリル板 x 2</li>
           <li>layer1のアクリル板</li>
         </ol>
+        <h3 className="mt-6 text-base font-semibold text-slate-100">完成品</h3>
+        <Image
+          src="/document/construction/construction-img-8.jpg"
+          alt="完成品"
+          width={800}
+          height={500}
+        />
       </section>
     </div>
   );

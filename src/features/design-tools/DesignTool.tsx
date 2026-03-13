@@ -5,6 +5,11 @@ import { Canvas } from "./Canvas";
 import { SelectButtonList } from "./SelectButtonList";
 import { NeonButton } from "@/app/components/ui/NeonButton";
 import { generateData } from "@/app/service/api";
+import {
+  trackGenerateClick,
+  trackGenerateFailure,
+  trackGenerateSuccess,
+} from "@/app/lib/analytics";
 
 type ChangeListener = () => void;
 
@@ -166,6 +171,61 @@ export class ButtonStore {
     if (this.selectedSet.size === 0) return;
     this.selectedSet.clear();
     this.emitChange();
+  }
+  getByRef(ref: string): ControllerButton | undefined {
+    return this.buttons.find((b) => b.id === ref);
+  }
+  /** Apply CSV import rows (ref, x_mm, y_mm, size_mm). Returns applied count and refs not found. */
+  applyCsvImport(
+    rows: { ref: string; x_mm: number; y_mm: number; size_mm: number }[]
+  ): { applied: number; skipped: string[] } {
+    const skipped: string[] = [];
+    const appliedRows: {
+      ref: string;
+      x_mm: number;
+      y_mm: number;
+      size_mm: number;
+    }[] = [];
+    const POS_TOLERANCE_MM = 0.01;
+    const MAX_VERIFY_ITERATIONS = 15;
+
+    // 1) Set size and initial position for each row (order-dependent drift can occur)
+    for (const row of rows) {
+      const btn = this.getByRef(row.ref);
+      if (!btn) {
+        skipped.push(row.ref);
+        continue;
+      }
+      const size =
+        row.size_mm === 18 || row.size_mm === 24 || row.size_mm === 30
+          ? NOMINAL_TO_ACTUAL[row.size_mm as ButtonSizeMm]
+          : row.size_mm;
+      btn.setDiameter(size);
+      this.moveWithConstraint(btn.uid, row.x_mm, row.y_mm);
+      appliedRows.push(row);
+    }
+
+    // 2) Verify and re-apply only drifted buttons until stable
+    for (let iter = 0; iter < MAX_VERIFY_ITERATIONS; iter++) {
+      const drifted: typeof appliedRows = [];
+      for (const row of appliedRows) {
+        const btn = this.getByRef(row.ref);
+        if (!btn) continue;
+        const dx = Math.abs(btn.x - row.x_mm);
+        const dy = Math.abs(btn.y - row.y_mm);
+        if (dx > POS_TOLERANCE_MM || dy > POS_TOLERANCE_MM) {
+          drifted.push(row);
+        }
+      }
+      if (drifted.length === 0) break;
+      for (const row of drifted) {
+        const btn = this.getByRef(row.ref);
+        if (btn) this.moveWithConstraint(btn.uid, row.x_mm, row.y_mm);
+      }
+    }
+
+    this.emitChange();
+    return { applied: appliedRows.length, skipped };
   }
   findByUid(uid: number | null | undefined): ControllerButton | undefined {
     if (uid == null) return undefined;
@@ -338,14 +398,96 @@ export const DEFAULT_BUTTONS: ButtonInit[] = [
   { id: "GPIO16", name: "SELECT", x: 270.96, y: 20, d: 18 },
 ];
 
+function parseCsvForImport(
+  text: string
+): { ref: string; x_mm: number; y_mm: number; size_mm: number }[] {
+  const trimmed = text.trim().replace(/\uFEFF/g, "");
+  const lines = trimmed.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+  if (lines.length < 2) return [];
+  const cols = (line: string) =>
+    line.split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+  const headerCells = cols(lines[0]).map((c) =>
+    c.toLowerCase().replace(/\uFEFF/g, "")
+  );
+  const refIdx = headerCells.indexOf("ref");
+  const xIdx = headerCells.indexOf("x_mm");
+  const yIdx = headerCells.indexOf("y_mm");
+  const sizeIdx = headerCells.indexOf("size_mm");
+  if (refIdx < 0 || xIdx < 0 || yIdx < 0 || sizeIdx < 0) return [];
+  const rows: { ref: string; x_mm: number; y_mm: number; size_mm: number }[] =
+    [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = cols(lines[i]);
+    if (cells.length <= Math.max(refIdx, xIdx, yIdx, sizeIdx)) continue;
+    const x = Number.parseFloat(cells[xIdx]);
+    const y = Number.parseFloat(cells[yIdx]);
+    const size = Number.parseFloat(cells[sizeIdx]);
+    if (Number.isNaN(x) || Number.isNaN(y) || Number.isNaN(size)) continue;
+    rows.push({
+      ref: (cells[refIdx] ?? "").replace(/\uFEFF/g, ""),
+      x_mm: x,
+      y_mm: y,
+      size_mm: size,
+    });
+  }
+  return rows;
+}
+
 export const DesignTool = () => {
   const storeRef = useRef<ButtonStore>(new ButtonStore(DEFAULT_BUTTONS));
+  const csvInputRef = useRef<HTMLInputElement>(null);
   const [showMarkers, setShowMarkers] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
 
+  const handleCsvImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result ?? "");
+      const rows = parseCsvForImport(text);
+      if (rows.length === 0) {
+        alert(
+          "CSVを解析できませんでした。ヘッダーに ref, x_mm, y_mm, size_mm を含めてください。"
+        );
+        e.target.value = "";
+        return;
+      }
+      const { applied, skipped } = storeRef.current.applyCsvImport(rows);
+      if (skipped.length > 0) {
+        alert(
+          `${applied}件を適用しました。次のrefは見つかりませんでした: ${skipped.join(", ")}`
+        );
+      } else {
+        alert(`${applied}件のボタン配置を適用しました。`);
+      }
+      e.target.value = "";
+    };
+    reader.readAsText(file, "UTF-8");
+  };
+
+  const handleCsvExport = () => {
+    const buttons = storeRef.current.getAll();
+    const header = "ref,x_mm,y_mm,rotation_deg,size_mm";
+    const lines = buttons.map(
+      (b) => `${b.id},${b.x},${b.y},0,${nominalFromDiameter(b.d)}`
+    );
+    const csv = [header, ...lines].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "button-layout.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   const handleGenerate = async () => {
     if (isSending) return;
+    trackGenerateClick();
     setIsSending(true);
     try {
       const controllerButtons = storeRef.current.getAll();
@@ -371,8 +513,10 @@ export const DesignTool = () => {
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 0);
+      trackGenerateSuccess();
     } catch (err) {
       console.error(err);
+      trackGenerateFailure();
       alert("生成に失敗しました。時間を置いて再度生成してください。");
     } finally {
       setIsSending(false);
@@ -407,6 +551,23 @@ export const DesignTool = () => {
             </NeonButton>
           </div>
           <div className="flex w-full md:w-auto flex-col md:flex-row gap-2">
+            <input
+              ref={csvInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={handleCsvImport}
+              aria-label="CSVファイルを選択"
+            />
+            <NeonButton
+              className="w-full md:w-40"
+              onClick={() => csvInputRef.current?.click()}
+            >
+              CSVインポート
+            </NeonButton>
+            <NeonButton className="w-full md:w-40" onClick={handleCsvExport}>
+              CSVダウンロード
+            </NeonButton>
             <NeonButton
               className="w-full md:w-40"
               onClick={() => storeRef.current.reset(DEFAULT_BUTTONS)}

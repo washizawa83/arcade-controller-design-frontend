@@ -45,7 +45,16 @@ export default function PrivacyPage() {
         <section className="mt-6">
           <h2 className="text-lg font-semibold text-slate-100">お問い合わせ</h2>
           <p className="mt-2 text-slate-300 text-sm md:text-base leading-relaxed md:leading-loose">
-            ポリシーに関するお問い合わせは管理者までご連絡ください。
+            ポリシーに関するお問い合わせは
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSePGOO7MHOnG7m2ckaK_Sc6dSl3I81hvyhWXAdy0kacZ_BodA/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-400 hover:underline"
+            >
+              お問い合わせフォーム
+            </a>
+            よりご連絡ください。
           </p>
           <p className="mt-3 text-xs text-slate-400">
             制定日: {new Date().toLocaleDateString("ja-JP")}

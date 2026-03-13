@@ -5,6 +5,7 @@ import { BaseHeader } from "@/layouts/BaseHeader";
 import { BaseFooter } from "@/layouts/BaseFooter";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
+import { GoogleAnalyticsScripts } from "@/app/components/GoogleAnalyticsScripts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -127,6 +128,11 @@ export default function RootLayout({
             },
           })}
         </Script>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalyticsScripts
+            measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
+          />
+        )}
         <Analytics />
       </body>
     </html>

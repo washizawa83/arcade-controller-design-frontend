@@ -34,6 +34,16 @@ export const BaseFooter = () => {
                   OSSライセンス
                 </Link>
               </li>
+              <li>
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSePGOO7MHOnG7m2ckaK_Sc6dSl3I81hvyhWXAdy0kacZ_BodA/viewform"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-pink-400"
+                >
+                  お問い合わせ
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
