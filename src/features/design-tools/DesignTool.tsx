@@ -531,7 +531,7 @@ export const DesignTool = () => {
       style={{ minHeight: "var(--spacing-content)" }}
     >
       <div className="flex-1 min-w-0">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between pb-2">
+        <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-start md:justify-between pb-2">
           <div className="w-full md:w-auto">
             <NeonButton
               className="w-full md:w-40"
@@ -550,7 +550,7 @@ export const DesignTool = () => {
               )}
             </NeonButton>
           </div>
-          <div className="flex w-full md:w-auto flex-col md:flex-row gap-2">
+          <div className="flex w-full md:w-auto flex-col md:flex-row md:flex-wrap gap-2">
             <input
               ref={csvInputRef}
               type="file"
@@ -563,10 +563,10 @@ export const DesignTool = () => {
               className="w-full md:w-40"
               onClick={() => csvInputRef.current?.click()}
             >
-              CSVインポート
+              座標データインポート
             </NeonButton>
             <NeonButton className="w-full md:w-40" onClick={handleCsvExport}>
-              CSVダウンロード
+              座標データダウンロード
             </NeonButton>
             <NeonButton
               className="w-full md:w-40"
