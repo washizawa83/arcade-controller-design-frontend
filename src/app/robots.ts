@@ -1,14 +1,13 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl } from "@/app/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://modern-design.example.com";
   return {
     rules: {
       userAgent: "*",
       allow: "/",
       disallow: [],
     },
-    sitemap: `${base}/sitemap.xml`,
+    sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

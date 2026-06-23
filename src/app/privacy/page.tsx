@@ -1,4 +1,12 @@
 import { BasePageLayout } from "@/layouts/BasePageLayout";
+import { createPageMetadata } from "@/app/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "プライバシーポリシー",
+  description:
+    "Modern Designで取得する情報、利用目的、第三者提供、セキュリティ、お問い合わせ方法をまとめたプライバシーポリシーです。",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

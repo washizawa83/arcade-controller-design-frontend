@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b1120; /* deep slate */
+  --background: #060a14; /* deeper slate */
   --foreground: #e2e8f0; /* slate-200 */
 }
 
@@ -15,7 +15,7 @@
   --font-mono: var(--font-geist-mono);
   /* Neon palette */
   --color-neon: #ff355d;
-  --color-panel: rgba(15, 23, 42, 0.6);
+  --color-panel: rgba(9, 14, 28, 0.78);
   --color-panel-border: rgba(255, 53, 93, 0.25);
 }
 
@@ -23,4 +23,54 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.arcade-glow-button {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #0a0f18;
+  box-shadow:
+    inset 0 0 0 1px rgba(15, 23, 42, 0.9),
+    0 0 10px rgba(251, 113, 133, 0.2),
+    0 0 24px rgba(244, 114, 182, 0.2),
+    0 0 42px rgba(59, 130, 246, 0.16);
+  transform: translate(-50%, -50%) translateZ(0);
+  animation-name: arcadeButtonGlow;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity, box-shadow;
+}
+
+@keyframes arcadeButtonGlow {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 0.58;
+    box-shadow:
+      inset 0 0 0 1px rgba(15, 23, 42, 0.95),
+      0 0 8px rgba(251, 113, 133, 0.16),
+      0 0 18px rgba(244, 114, 182, 0.16),
+      0 0 30px rgba(59, 130, 246, 0.14);
+  }
+
+  45% {
+    transform: translate(-50%, -50%);
+    opacity: 0.88;
+    box-shadow:
+      inset 0 0 0 1px rgba(15, 23, 42, 0.95),
+      0 0 12px rgba(251, 113, 133, 0.24),
+      0 0 28px rgba(244, 114, 182, 0.3),
+      0 0 52px rgba(96, 165, 250, 0.25);
+  }
+
+  70% {
+    transform: translate(-50%, -50%);
+    opacity: 0.74;
+    box-shadow:
+      inset 0 0 0 1px rgba(15, 23, 42, 0.95),
+      0 0 10px rgba(251, 113, 133, 0.2),
+      0 0 22px rgba(244, 114, 182, 0.22),
+      0 0 40px rgba(59, 130, 246, 0.2);
+  }
 }

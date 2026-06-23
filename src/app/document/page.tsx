@@ -1,4 +1,12 @@
 import Link from "next/link";
+import { createPageMetadata } from "@/app/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "レバーレスコントローラー自作ドキュメント",
+  description:
+    "Modern Designの使い方、KiCadデータの出力、基板注文、部品選び、組み立て手順をまとめたレバーレスコントローラー自作ガイドです。",
+  path: "/document",
+});
 
 export const DocumentPage = () => {
   return (

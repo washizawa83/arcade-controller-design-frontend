@@ -1,5 +1,13 @@
 import { BaseLink } from "@/app/components/ui/BaseLink";
+import { createPageMetadata } from "@/app/lib/seo";
 import Image from "next/image";
+
+export const metadata = createPageMetadata({
+  title: "レバーレスコントローラー基板の注文方法",
+  description:
+    "KiCadからガーバーデータを出力し、JLCPCBでレバーレスコントローラー用基板を注文する流れと、アクリル板加工データの使い方を説明します。",
+  path: "/document/order",
+});
 
 export default function OrderPage() {
   const kicadId = "kicad";

@@ -4,7 +4,7 @@ export const BaseFooter = () => {
   return (
     <footer
       className="w-screen border-t border-pink-500/30"
-      style={{ background: "#0b1120" }}
+      style={{ background: "#060a14" }}
     >
       <div className="mx-auto w-11/12 2xl:w-[1280px] py-8 text-slate-200">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">

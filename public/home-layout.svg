@@ -1,0 +1,52 @@
+<svg width="560" height="320" viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="layoutBg" x1="20" y1="20" x2="540" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D1529"/>
+      <stop offset="1" stop-color="#090F1F"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="12" y="12" width="536" height="296" rx="22" fill="url(#layoutBg)" stroke="#FB7185" stroke-opacity="0.28" stroke-width="2"/>
+
+  <!-- left control panel -->
+  <rect x="34" y="34" width="154" height="252" rx="14" fill="#0F182D" stroke="#FB7185" stroke-opacity="0.2"/>
+  <rect x="50" y="52" width="94" height="10" rx="5" fill="#475569"/>
+  <rect x="50" y="70" width="120" height="6" rx="3" fill="#334155"/>
+  <rect x="50" y="92" width="122" height="86" rx="10" fill="#111C34" stroke="#334155"/>
+  <rect x="50" y="188" width="122" height="82" rx="10" fill="#111C34" stroke="#334155"/>
+  <rect x="58" y="100" width="78" height="8" rx="4" fill="#64748B"/>
+  <rect x="58" y="114" width="62" height="6" rx="3" fill="#475569"/>
+  <rect x="58" y="128" width="86" height="6" rx="3" fill="#475569"/>
+  <rect x="58" y="142" width="72" height="6" rx="3" fill="#475569"/>
+
+  <!-- editor canvas -->
+  <rect x="204" y="34" width="322" height="252" rx="14" fill="#0A1325" stroke="#22D3EE" stroke-opacity="0.26"/>
+  <path d="M220 54H510M220 78H510M220 102H510M220 126H510M220 150H510M220 174H510M220 198H510M220 222H510M220 246H510" stroke="#16233D" stroke-width="1"/>
+  <path d="M228 50V270M258 50V270M288 50V270M318 50V270M348 50V270M378 50V270M408 50V270M438 50V270M468 50V270M498 50V270" stroke="#132038" stroke-width="1"/>
+
+  <!-- generate-page-like button arrangement -->
+  <g fill="#0A0F1A" stroke-width="2">
+    <circle cx="365" cy="214" r="16" stroke="#FB7185"/>
+    <circle cx="353" cy="137" r="16" stroke="#FB7185"/>
+    <circle cx="330" cy="120" r="16" stroke="#FB7185"/>
+    <circle cx="305" cy="120" r="16" stroke="#FB7185"/>
+    <circle cx="378" cy="124" r="16" stroke="#FB7185"/>
+    <circle cx="402" cy="109" r="16" stroke="#FB7185"/>
+    <circle cx="430" cy="109" r="16" stroke="#FB7185"/>
+    <circle cx="458" cy="113" r="16" stroke="#FB7185"/>
+    <circle cx="376" cy="164" r="16" stroke="#FB7185"/>
+    <circle cx="402" cy="151" r="16" stroke="#FB7185"/>
+    <circle cx="430" cy="151" r="16" stroke="#FB7185"/>
+    <circle cx="458" cy="157" r="16" stroke="#FB7185"/>
+    <circle cx="339" cy="204" r="16" stroke="#FB7185"/>
+    <circle cx="391" cy="204" r="16" stroke="#FB7185"/>
+    <circle cx="279" cy="128" r="16" stroke="#FB7185"/>
+    <circle cx="420" cy="84" r="10" stroke="#22D3EE"/>
+    <circle cx="445" cy="84" r="10" stroke="#22D3EE"/>
+    <circle cx="470" cy="84" r="10" stroke="#22D3EE"/>
+  </g>
+
+  <!-- selected button highlight -->
+  <circle cx="430" cy="151" r="20" stroke="#22D3EE" stroke-opacity="0.85" stroke-width="2" stroke-dasharray="4 4"/>
+  <circle cx="430" cy="151" r="16" fill="#0A0F1A" stroke="#FB7185" stroke-width="2"/>
+</svg>

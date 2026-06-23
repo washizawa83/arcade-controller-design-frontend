@@ -1,60 +1,59 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl } from "@/app/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://modern-design.example.com";
   const now = new Date();
   return [
     {
-      url: `${base}/`,
+      url: absoluteUrl("/"),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: `${base}/generate`,
+      url: absoluteUrl("/generate"),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${base}/document`,
+      url: absoluteUrl("/document"),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: `${base}/document/how-to`,
+      url: absoluteUrl("/document/how-to"),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: `${base}/document/order`,
+      url: absoluteUrl("/document/order"),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: `${base}/document/construction`,
+      url: absoluteUrl("/document/construction"),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: `${base}/terms`,
+      url: absoluteUrl("/terms"),
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: `${base}/privacy`,
+      url: absoluteUrl("/privacy"),
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: `${base}/oss`,
+      url: absoluteUrl("/oss"),
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,

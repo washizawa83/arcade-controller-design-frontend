@@ -1,4 +1,12 @@
 import { BasePageLayout } from "@/layouts/BasePageLayout";
+import { createPageMetadata } from "@/app/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "利用規約",
+  description:
+    "Modern Designの利用条件、禁止事項、免責事項、知的財産権などを定めた利用規約です。",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

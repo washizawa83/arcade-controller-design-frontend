@@ -1,6 +1,14 @@
 import { BaseLink } from "@/app/components/ui/BaseLink";
 import { LinkPreview } from "@/app/components/ui/LinkPreview";
+import { createPageMetadata } from "@/app/lib/seo";
 import Image from "next/image";
+
+export const metadata = createPageMetadata({
+  title: "レバーレスコントローラーの部品と組み立て手順",
+  description:
+    "レバーレスコントローラー自作に必要なキースイッチ、キーキャップ、Raspberry Pi Picoなどの部品と、ハンダ付け、動作確認、組み立て手順を紹介します。",
+  path: "/document/construction",
+});
 
 export default function ConstructionPage() {
   const partsId = "parts";

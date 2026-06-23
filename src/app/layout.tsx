@@ -6,6 +6,12 @@ import { BaseFooter } from "@/layouts/BaseFooter";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import { GoogleAnalyticsScripts } from "@/app/components/GoogleAnalyticsScripts";
+import {
+  absoluteUrl,
+  getSiteUrl,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+} from "@/app/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,15 +30,12 @@ const brandFont = Quicksand({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://modern-design.example.com"
-  ),
+  metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Modern Design",
-    template: "%s | Modern Design",
+    default: "レバーレスコントローラー基板設計ツール | Modern Design",
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "自作薄型レバーレスコントローラーの作成をサポート。ボタン配置をドラッグ＆ドロップで直感的にデザインし、ワンクリックでKiCadプロジェクトを生成できます。",
+  description: SITE_DESCRIPTION,
   keywords: [
     "レバーレス",
     "アケコン",
@@ -42,30 +45,36 @@ export const metadata: Metadata = {
     "基板設計",
     "PCB",
     "自作コントローラー",
+    "レバーレス 自作",
+    "アケコン 自作",
+    "GP2040-CE",
+    "Raspberry Pi Pico",
   ],
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: getSiteUrl() }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   openGraph: {
     type: "website",
     url: "/",
-    title: "Modern Design - レバーレスコントローラー設計ツール",
-    description:
-      "ドラッグ＆ドロップでボタン配置をデザインし、KiCadデータを自動生成。",
-    siteName: "Modern Design",
+    title: "レバーレスコントローラー基板設計ツール | Modern Design",
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/logo.svg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Modern Design",
+        alt: "Modern Design - レバーレスコントローラー基板設計ツール",
       },
     ],
     locale: "ja_JP",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Modern Design - レバーレスコントローラー設計ツール",
-    description:
-      "ドラッグ＆ドロップでボタン配置をデザインし、KiCadデータを自動生成。",
-    images: ["/logo.svg"],
+    title: "レバーレスコントローラー基板設計ツール | Modern Design",
+    description: SITE_DESCRIPTION,
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -93,39 +102,44 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${brandFont.variable} antialiased`}
       >
-        <main>
-          <BaseHeader />
-          {children}
-          <BaseFooter />
-        </main>
+        <BaseHeader />
+        <main>{children}</main>
+        <BaseFooter />
         {/* JSON-LD structured data */}
         <Script type="application/ld+json" strategy="afterInteractive">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "Modern Design",
-            url:
-              process.env.NEXT_PUBLIC_SITE_URL ||
-              "https://modern-design.example.com",
-            logo: "/logo.svg",
+            "@type": "WebApplication",
+            name: SITE_NAME,
+            url: getSiteUrl(),
+            applicationCategory: "DesignApplication",
+            operatingSystem: "Web",
+            inLanguage: "ja-JP",
+            description: SITE_DESCRIPTION,
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "JPY",
+            },
           })}
         </Script>
         <Script type="application/ld+json" strategy="afterInteractive">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Modern Design",
-            url:
-              process.env.NEXT_PUBLIC_SITE_URL ||
-              "https://modern-design.example.com",
-            potentialAction: {
-              "@type": "SearchAction",
-              target: `${
-                process.env.NEXT_PUBLIC_SITE_URL ||
-                "https://modern-design.example.com"
-              }/search?q={search_term_string}`,
-              "query-input": "required name=search_term_string",
-            },
+            name: SITE_NAME,
+            url: getSiteUrl(),
+            inLanguage: "ja-JP",
+            description: SITE_DESCRIPTION,
+          })}
+        </Script>
+        <Script type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: SITE_NAME,
+            url: getSiteUrl(),
+            logo: absoluteUrl("/logo.svg"),
           })}
         </Script>
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (

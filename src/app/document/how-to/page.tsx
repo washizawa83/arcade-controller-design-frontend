@@ -1,5 +1,13 @@
 import { BaseLink } from "@/app/components/ui/BaseLink";
+import { createPageMetadata } from "@/app/lib/seo";
 import Image from "next/image";
+
+export const metadata = createPageMetadata({
+  title: "レバーレスコントローラー設計ツールの使い方",
+  description:
+    "Modern Designでボタン配置を編集し、サイズ変更、複数選択、干渉回避、KiCad基板データ生成を行う手順を説明します。",
+  path: "/document/how-to",
+});
 
 export default function HowToPage() {
   const editorId = "editor";

@@ -1,4 +1,12 @@
 import { BasePageLayout } from "@/layouts/BasePageLayout";
+import { createPageMetadata } from "@/app/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "OSSライセンス",
+  description:
+    "Modern Designが利用しているKiCadやFreeroutingなどのOSSライセンス情報を掲載しています。",
+  path: "/oss",
+});
 
 export default function OssPage() {
   return (
